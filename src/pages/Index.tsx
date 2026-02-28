@@ -33,10 +33,13 @@ const Index = () => {
   const dias = useMemo(() => {
     const result = [];
     const hoje = new Date();
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 14; i++) {
       const d = new Date();
       d.setDate(hoje.getDate() + i);
+      const dow = d.getDay();
+      if (dow === 0 || dow === 1) continue; // pula domingo e segunda
       result.push(d);
+      if (result.length === 7) break;
     }
     return result;
   }, []);
