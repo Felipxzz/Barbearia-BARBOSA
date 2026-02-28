@@ -49,7 +49,7 @@ const Index = () => {
 
     const servicoInfo = SERVICOS.find((s) => s.id === servico);
     const barbeiroInfo = BARBEIROS.find((b) => b.id === barbeiro);
-    const telefoneBarbearia = "15996858049";
+    const telefoneBarbearia = barbeiro === "ryan" ? "15991566902" : "15997451750";
 
     const mensagem = `Olá, gostaria de agendar na Barbearia Barbosa.
 Nome: ${nome}
