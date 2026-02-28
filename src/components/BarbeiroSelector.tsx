@@ -1,8 +1,10 @@
 import { Scissors } from "lucide-react";
+import ryanImg from "@/assets/ryan.jpeg";
 
 interface Barbeiro {
   id: string;
   nome: string;
+  foto?: string;
 }
 
 interface Props {
@@ -10,6 +12,10 @@ interface Props {
   selected: string;
   onSelect: (id: string) => void;
 }
+
+const FOTOS: Record<string, string> = {
+  ryan: ryanImg,
+};
 
 const BarbeiroSelector = ({ barbeiros, selected, onSelect }: Props) => (
   <section>
@@ -25,9 +31,13 @@ const BarbeiroSelector = ({ barbeiros, selected, onSelect }: Props) => (
               : "bg-card text-foreground border-gold-subtle hover:scale-[1.02]"
           }`}
         >
-          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-            <Scissors className="w-5 h-5" />
-          </div>
+          {FOTOS[b.id] ? (
+            <img src={FOTOS[b.id]} alt={b.nome} className="w-12 h-12 rounded-full object-cover" />
+          ) : (
+            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+              <Scissors className="w-5 h-5" />
+            </div>
+          )}
           <span>{b.nome}</span>
         </button>
       ))}
