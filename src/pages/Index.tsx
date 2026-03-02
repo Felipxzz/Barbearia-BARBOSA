@@ -9,7 +9,7 @@ import HorarioSelector from "@/components/HorarioSelector";
 import BotaoAgendar from "@/components/BotaoAgendar";
 
 const SERVICOS = [
-  { id: "corte", nome: "Corte Avulso", preco: "R$30" },
+  { id: "corte", nome: "Corte", preco: "R$30" },
   { id: "plano", nome: "Plano Mensal", preco: "R$70" },
   { id: "pezinho", nome: "Pezinho", preco: "R$10" },
   { id: "barba", nome: "Barba", preco: "R$15" },
