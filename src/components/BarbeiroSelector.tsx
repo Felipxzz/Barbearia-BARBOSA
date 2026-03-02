@@ -1,5 +1,6 @@
 import { Scissors } from "lucide-react";
 import ryanImg from "@/assets/ryan.jpeg";
+import muriloImg from "@/assets/murilo.jpeg";
 
 interface Barbeiro {
   id: string;
@@ -15,6 +16,7 @@ interface Props {
 
 const FOTOS: Record<string, string> = {
   ryan: ryanImg,
+  murilo: muriloImg,
 };
 
 const BarbeiroSelector = ({ barbeiros, selected, onSelect }: Props) => (
