@@ -1,4 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import HeroSection from "@/components/HeroSection";
 import GaleriaCortes from "@/components/GaleriaCortes";
 import FormDados from "@/components/FormDados";
@@ -32,6 +34,8 @@ const Index = () => {
   const [barbeiro, setBarbeiro] = useState("");
   const [dia, setDia] = useState("");
   const [horario, setHorario] = useState("");
+  const [horariosOcupados, setHorariosOcupados] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const dias = useMemo(() => {
     const result = [];
@@ -40,18 +44,61 @@ const Index = () => {
       const d = new Date();
       d.setDate(hoje.getDate() + i);
       const dow = d.getDay();
-      if (dow === 0 || dow === 1) continue; // pula domingo e segunda
+      if (dow === 0 || dow === 1) continue;
       result.push(d);
       if (result.length === 7) break;
     }
     return result;
   }, []);
 
-  const handleAgendar = () => {
-    if (!nome || !telefone || !servico || !barbeiro || !dia || !horario) {
-      alert("Preencha todas as informações!");
+  // Buscar horários ocupados quando barbeiro ou dia mudar
+  useEffect(() => {
+    if (!barbeiro || !dia) {
+      setHorariosOcupados([]);
       return;
     }
+    const fetchOcupados = async () => {
+      const { data } = await supabase
+        .from("agendamentos")
+        .select("horario")
+        .eq("barbeiro", barbeiro)
+        .eq("dia", dia);
+      setHorariosOcupados(data?.map((a) => a.horario) ?? []);
+    };
+    fetchOcupados();
+  }, [barbeiro, dia]);
+
+  const handleAgendar = async () => {
+    if (!nome || !telefone || !servico || !barbeiro || !dia || !horario) {
+      toast.error("Preencha todas as informações!");
+      return;
+    }
+
+    setLoading(true);
+
+    // Salvar no banco
+    const { error } = await supabase.from("agendamentos").insert({
+      nome,
+      telefone,
+      servico,
+      barbeiro,
+      dia,
+      horario,
+      obs,
+    });
+
+    if (error) {
+      if (error.code === "23505") {
+        toast.error("Este horário já foi reservado! Escolha outro.");
+      } else {
+        toast.error("Erro ao agendar. Tente novamente.");
+      }
+      setLoading(false);
+      return;
+    }
+
+    // Atualizar horários ocupados
+    setHorariosOcupados((prev) => [...prev, horario]);
 
     const servicoInfo = SERVICOS.find((s) => s.id === servico);
     const barbeiroInfo = BARBEIROS.find((b) => b.id === barbeiro);
@@ -70,6 +117,9 @@ OBS: ${obs}`;
       `https://wa.me/${telefoneBarbearia}?text=${encodeURIComponent(mensagem)}`,
       "_blank"
     );
+
+    toast.success("Agendamento realizado com sucesso!");
+    setLoading(false);
   };
 
   return (
@@ -97,10 +147,15 @@ OBS: ${obs}`;
         />
         <DiaSelector dias={dias} selected={dia} onSelect={(d) => { setDia(d); setHorario(""); }} />
         {dia && (
-          <HorarioSelector dia={dia} selected={horario} onSelect={setHorario} />
+          <HorarioSelector
+            dia={dia}
+            selected={horario}
+            onSelect={setHorario}
+            horariosOcupados={horariosOcupados}
+          />
         )}
       </div>
-      <BotaoAgendar onClick={handleAgendar} />
+      <BotaoAgendar onClick={handleAgendar} disabled={loading} />
     </div>
   );
 };
