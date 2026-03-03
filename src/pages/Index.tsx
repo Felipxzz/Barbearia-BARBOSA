@@ -14,6 +14,9 @@ const SERVICOS = [
   { id: "pezinho", nome: "Pezinho", preco: "R$10" },
   { id: "barba", nome: "Barba", preco: "R$15" },
   { id: "corte-barba", nome: "Corte + Barba", preco: "R$40" },
+  { id: "pigmentacao", nome: "Pigmentação", preco: "R$15" },
+  { id: "luzes", nome: "Luzes", preco: "R$100" },
+  { id: "platinado", nome: "Platinado", preco: "R$120" },
 ];
 
 const BARBEIROS = [
