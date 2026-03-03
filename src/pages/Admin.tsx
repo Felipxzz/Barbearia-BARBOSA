@@ -1,0 +1,155 @@
+import { useState, useEffect, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { Trash2, LogOut, Lock } from "lucide-react";
+
+interface Agendamento {
+  id: string;
+  nome: string;
+  telefone: string;
+  servico: string;
+  barbeiro: string;
+  dia: string;
+  horario: string;
+  obs: string | null;
+  created_at: string;
+}
+
+const Admin = () => {
+  const [senha, setSenha] = useState("");
+  const [autenticado, setAutenticado] = useState(false);
+  const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [senhaArmazenada, setSenhaArmazenada] = useState("");
+
+  const fetchAgendamentos = useCallback(async (pass: string) => {
+    setLoading(true);
+    const { data, error } = await supabase.functions.invoke("admin-agendamentos", {
+      body: { password: pass, action: "list" },
+    });
+    if (error || data?.error) {
+      toast.error(data?.error || "Erro ao carregar agendamentos");
+      if (data?.error === "Senha incorreta") setAutenticado(false);
+    } else {
+      setAgendamentos(data.data || []);
+    }
+    setLoading(false);
+  }, []);
+
+  const handleLogin = async () => {
+    if (!senha) return;
+    setLoading(true);
+    const { data, error } = await supabase.functions.invoke("admin-agendamentos", {
+      body: { password: senha, action: "list" },
+    });
+    if (error || data?.error) {
+      toast.error(data?.error || "Erro ao autenticar");
+      setLoading(false);
+      return;
+    }
+    setSenhaArmazenada(senha);
+    setAutenticado(true);
+    setAgendamentos(data.data || []);
+    setLoading(false);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Tem certeza que deseja cancelar este agendamento e liberar o horário?")) return;
+    const { data, error } = await supabase.functions.invoke("admin-agendamentos", {
+      body: { password: senhaArmazenada, action: "delete", id },
+    });
+    if (error || data?.error) {
+      toast.error("Erro ao deletar");
+      return;
+    }
+    toast.success("Horário liberado com sucesso!");
+    setAgendamentos((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  if (!autenticado) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="w-full max-w-sm space-y-6">
+          <div className="text-center">
+            <div className="mx-auto w-16 h-16 rounded-full bg-card flex items-center justify-center mb-4">
+              <Lock className="w-8 h-8 text-gold" />
+            </div>
+            <h1 className="text-gold text-2xl font-bold">Painel Admin</h1>
+            <p className="text-muted-foreground text-sm mt-1">Barbearia Barbosa</p>
+          </div>
+          <div className="space-y-3">
+            <input
+              type="password"
+              placeholder="Senha de administrador"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+              className="w-full p-3.5 rounded-xl border-none bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+            <button
+              onClick={handleLogin}
+              disabled={loading}
+              className="w-full py-3.5 rounded-xl gradient-gold text-primary-foreground font-bold text-sm disabled:opacity-50"
+            >
+              {loading ? "Entrando..." : "Entrar"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background p-4">
+      <div className="max-w-2xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-gold text-xl font-bold">Painel Admin</h1>
+          <button
+            onClick={() => { setAutenticado(false); setSenha(""); setSenhaArmazenada(""); }}
+            className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors"
+          >
+            <LogOut className="w-4 h-4" /> Sair
+          </button>
+        </div>
+
+        <button
+          onClick={() => fetchAgendamentos(senhaArmazenada)}
+          disabled={loading}
+          className="mb-4 px-4 py-2 rounded-lg bg-card text-foreground text-sm hover:scale-105 transition-transform disabled:opacity-50"
+        >
+          {loading ? "Atualizando..." : "Atualizar lista"}
+        </button>
+
+        {agendamentos.length === 0 ? (
+          <p className="text-muted-foreground text-center py-8">Nenhum agendamento encontrado.</p>
+        ) : (
+          <div className="space-y-3">
+            {agendamentos.map((a) => (
+              <div key={a.id} className="bg-card rounded-xl p-4 flex items-start justify-between gap-3">
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-gold font-bold text-sm">{a.dia}</span>
+                    <span className="text-foreground font-bold text-sm">{a.horario}</span>
+                  </div>
+                  <p className="text-foreground text-sm"><strong>Cliente:</strong> {a.nome}</p>
+                  <p className="text-muted-foreground text-xs">Tel: {a.telefone}</p>
+                  <p className="text-muted-foreground text-xs">Serviço: {a.servico} | Barbeiro: {a.barbeiro}</p>
+                  {a.obs && <p className="text-muted-foreground text-xs">OBS: {a.obs}</p>}
+                </div>
+                <button
+                  onClick={() => handleDelete(a.id)}
+                  className="text-destructive hover:text-destructive/80 transition-colors p-2"
+                  title="Cancelar agendamento e liberar horário"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Admin;

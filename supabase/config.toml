@@ -1,1 +1,4 @@
 project_id = "visvosrkpsoruqvloqtg"
+
+[functions.admin-agendamentos]
+verify_jwt = false
