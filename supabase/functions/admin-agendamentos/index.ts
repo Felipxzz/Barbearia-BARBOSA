@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import * as OTPAuth from "https://esm.sh/otpauth@9.3.5";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -9,7 +10,7 @@ const corsHeaders = {
 // Simple in-memory rate limiter
 const loginAttempts = new Map<string, { count: number; lastAttempt: number }>();
 const MAX_ATTEMPTS = 5;
-const LOCKOUT_MS = 15 * 60 * 1000; // 15 minutes
+const LOCKOUT_MS = 15 * 60 * 1000;
 
 function checkRateLimit(ip: string): boolean {
   const now = Date.now();
@@ -37,15 +38,31 @@ function recordAttempt(ip: string, success: boolean) {
   }
 }
 
+function verifyTOTP(token: string): boolean {
+  const secret = Deno.env.get("TOTP_SECRET");
+  if (!secret) return true; // If no TOTP secret configured, skip 2FA
+
+  const totp = new OTPAuth.TOTP({
+    issuer: "BarbeariaBarbosa",
+    label: "Admin",
+    algorithm: "SHA1",
+    digits: 6,
+    period: 30,
+    secret: secret,
+  });
+
+  const delta = totp.validate({ token, window: 1 });
+  return delta !== null;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   const ip = req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || "unknown";
-
   const body = await req.json();
-  const { password, action, id, updates } = body;
+  const { password, action, id, updates, totp_code } = body;
 
   // Rate limit check
   if (!checkRateLimit(ip)) {
@@ -64,6 +81,29 @@ Deno.serve(async (req) => {
     );
   }
 
+  // Check if 2FA is configured
+  const totpSecret = Deno.env.get("TOTP_SECRET");
+  const has2FA = !!totpSecret && totpSecret.length > 0;
+
+  // If 2FA is enabled and this is the login action, require TOTP
+  if (has2FA && action === "login-check") {
+    return new Response(
+      JSON.stringify({ requires2fa: true }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+
+  // For all data actions, verify TOTP if enabled
+  if (has2FA) {
+    if (!totp_code || !verifyTOTP(totp_code)) {
+      recordAttempt(ip, false);
+      return new Response(
+        JSON.stringify({ error: "Código 2FA inválido" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+  }
+
   recordAttempt(ip, true);
 
   const supabase = createClient(
@@ -71,7 +111,7 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
 
-  if (action === "list") {
+  if (action === "list" || action === "login-check") {
     const { data, error } = await supabase
       .from("agendamentos")
       .select("*")
