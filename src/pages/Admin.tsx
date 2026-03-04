@@ -1,7 +1,18 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Trash2, LogOut, Lock } from "lucide-react";
+import { Trash2, LogOut, Lock, Pencil, X, Check, ShieldAlert } from "lucide-react";
+
+const SERVICOS = [
+  { id: "corte", nome: "Corte", preco: "R$30" },
+  { id: "plano", nome: "Plano Mensal", preco: "R$70" },
+  { id: "pezinho", nome: "Pezinho", preco: "R$10" },
+  { id: "barba", nome: "Barba", preco: "R$15" },
+  { id: "corte-barba", nome: "Corte + Barba", preco: "R$40" },
+  { id: "pigmentacao", nome: "Pigmentação", preco: "R$15" },
+  { id: "luzes", nome: "Luzes", preco: "R$100" },
+  { id: "platinado", nome: "Platinado", preco: "R$120" },
+];
 
 interface Agendamento {
   id: string;
@@ -21,6 +32,10 @@ const Admin = () => {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
   const [loading, setLoading] = useState(false);
   const [senhaArmazenada, setSenhaArmazenada] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editServico, setEditServico] = useState("");
+  const [tentativas, setTentativas] = useState(0);
+  const [bloqueado, setBloqueado] = useState(false);
 
   const fetchAgendamentos = useCallback(async (pass: string) => {
     setLoading(true);
@@ -37,16 +52,29 @@ const Admin = () => {
   }, []);
 
   const handleLogin = async () => {
-    if (!senha) return;
+    if (!senha || bloqueado) return;
     setLoading(true);
     const { data, error } = await supabase.functions.invoke("admin-agendamentos", {
       body: { password: senha, action: "list" },
     });
+
     if (error || data?.error) {
-      toast.error(data?.error || "Erro ao autenticar");
+      const msg = data?.error || "Erro ao autenticar";
+      const newTentativas = tentativas + 1;
+      setTentativas(newTentativas);
+
+      if (msg.includes("Muitas tentativas") || newTentativas >= 5) {
+        setBloqueado(true);
+        toast.error("Bloqueado por muitas tentativas. Aguarde 15 minutos.");
+        setTimeout(() => { setBloqueado(false); setTentativas(0); }, 15 * 60 * 1000);
+      } else {
+        toast.error(`${msg} (${5 - newTentativas} tentativas restantes)`);
+      }
       setLoading(false);
       return;
     }
+
+    setTentativas(0);
     setSenhaArmazenada(senha);
     setAutenticado(true);
     setAgendamentos(data.data || []);
@@ -66,6 +94,35 @@ const Admin = () => {
     setAgendamentos((prev) => prev.filter((a) => a.id !== id));
   };
 
+  const handleEditStart = (a: Agendamento) => {
+    setEditingId(a.id);
+    setEditServico(a.servico);
+  };
+
+  const handleEditSave = async (id: string) => {
+    const { data, error } = await supabase.functions.invoke("admin-agendamentos", {
+      body: { password: senhaArmazenada, action: "update", id, updates: { servico: editServico } },
+    });
+    if (error || data?.error) {
+      toast.error("Erro ao atualizar");
+      return;
+    }
+    toast.success("Serviço atualizado!");
+    setAgendamentos((prev) => prev.map((a) => a.id === id ? { ...a, servico: editServico } : a));
+    setEditingId(null);
+  };
+
+  // Add noindex meta tag
+  if (typeof document !== "undefined") {
+    let meta = document.querySelector('meta[name="robots"]') as HTMLMetaElement;
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "robots";
+      document.head.appendChild(meta);
+    }
+    meta.content = "noindex, nofollow";
+  }
+
   if (!autenticado) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -84,11 +141,18 @@ const Admin = () => {
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-              className="w-full p-3.5 rounded-xl border-none bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              disabled={bloqueado}
+              className="w-full p-3.5 rounded-xl border-none bg-card text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
             />
+            {bloqueado && (
+              <div className="flex items-center gap-2 text-destructive text-xs">
+                <ShieldAlert className="w-4 h-4" />
+                <span>Bloqueado por muitas tentativas. Aguarde 15 min.</span>
+              </div>
+            )}
             <button
               onClick={handleLogin}
-              disabled={loading}
+              disabled={loading || bloqueado}
               className="w-full py-3.5 rounded-xl gradient-gold text-primary-foreground font-bold text-sm disabled:opacity-50"
             >
               {loading ? "Entrando..." : "Entrar"}
@@ -133,7 +197,34 @@ const Admin = () => {
                   </div>
                   <p className="text-foreground text-sm"><strong>Cliente:</strong> {a.nome}</p>
                   <p className="text-muted-foreground text-xs">Tel: {a.telefone}</p>
-                  <p className="text-muted-foreground text-xs">Serviço: {a.servico} | Barbeiro: {a.barbeiro}</p>
+                  
+                  {editingId === a.id ? (
+                    <div className="flex items-center gap-2 mt-1">
+                      <select
+                        value={editServico}
+                        onChange={(e) => setEditServico(e.target.value)}
+                        className="bg-background text-foreground text-xs rounded-lg px-2 py-1.5 border border-border focus:outline-none focus:ring-1 focus:ring-ring"
+                      >
+                        {SERVICOS.map((s) => (
+                          <option key={s.id} value={s.nome}>{s.nome} — {s.preco}</option>
+                        ))}
+                      </select>
+                      <button onClick={() => handleEditSave(a.id)} className="text-green-500 hover:text-green-400 p-1">
+                        <Check className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => setEditingId(null)} className="text-muted-foreground hover:text-foreground p-1">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="text-muted-foreground text-xs">
+                      Serviço: {a.servico} | Barbeiro: {a.barbeiro}
+                      <button onClick={() => handleEditStart(a)} className="ml-2 text-gold hover:text-gold/80 inline-flex items-center gap-0.5">
+                        <Pencil className="w-3 h-3" />
+                      </button>
+                    </p>
+                  )}
+                  
                   {a.obs && <p className="text-muted-foreground text-xs">OBS: {a.obs}</p>}
                 </div>
                 <button
