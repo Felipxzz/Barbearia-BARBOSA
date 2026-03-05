@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import * as OTPAuth from "https://esm.sh/otpauth@9.3.5";
+// OTPAuth import removed - 2FA disabled for now
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -38,22 +38,7 @@ function recordAttempt(ip: string, success: boolean) {
   }
 }
 
-function verifyTOTP(token: string): boolean {
-  const secret = Deno.env.get("TOTP_SECRET");
-  if (!secret) return true; // If no TOTP secret configured, skip 2FA
-
-  const totp = new OTPAuth.TOTP({
-    issuer: "BarbeariaBarbosa",
-    label: "Admin",
-    algorithm: "SHA1",
-    digits: 6,
-    period: 30,
-    secret: secret,
-  });
-
-  const delta = totp.validate({ token, window: 1 });
-  return delta !== null;
-}
+// 2FA disabled - direct password auth only
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -79,29 +64,6 @@ Deno.serve(async (req) => {
       JSON.stringify({ error: "Senha incorreta" }),
       { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
-  }
-
-  // Check if 2FA is configured
-  const totpSecret = Deno.env.get("TOTP_SECRET");
-  const has2FA = !!totpSecret && totpSecret.length > 0;
-
-  // If 2FA is enabled and this is the login action, require TOTP
-  if (has2FA && action === "login-check") {
-    return new Response(
-      JSON.stringify({ requires2fa: true }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
-  }
-
-  // For all data actions, verify TOTP if enabled
-  if (has2FA) {
-    if (!totp_code || !verifyTOTP(totp_code)) {
-      recordAttempt(ip, false);
-      return new Response(
-        JSON.stringify({ error: "Código 2FA inválido" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
   }
 
   recordAttempt(ip, true);

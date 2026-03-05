@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Trash2, LogOut, Lock, Pencil, X, Check, ShieldAlert, Filter, KeyRound } from "lucide-react";
+import { Trash2, LogOut, Lock, Pencil, X, Check, ShieldAlert, Filter } from "lucide-react";
 
 const SERVICOS = [
   { id: "corte", nome: "Corte", preco: "R$30" },
@@ -28,7 +28,7 @@ interface Agendamento {
   created_at: string;
 }
 
-type LoginStep = "password" | "totp" | "authenticated";
+type LoginStep = "password" | "authenticated";
 
 const Admin = () => {
   const [senha, setSenha] = useState("");
@@ -37,7 +37,6 @@ const Admin = () => {
   const [agendamentos, setAgendamentos] = useState<Agendamento[]>([]);
   const [loading, setLoading] = useState(false);
   const [senhaArmazenada, setSenhaArmazenada] = useState("");
-  const [totpArmazenado, setTotpArmazenado] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editServico, setEditServico] = useState("");
   const [tentativas, setTentativas] = useState(0);
@@ -47,14 +46,14 @@ const Admin = () => {
   const [filtroBarbeiro, setFiltroBarbeiro] = useState("");
   const [filtroDia, setFiltroDia] = useState("");
 
-  const fetchAgendamentos = useCallback(async (pass: string, totp: string) => {
+  const fetchAgendamentos = useCallback(async (pass: string) => {
     setLoading(true);
     const { data, error } = await supabase.functions.invoke("admin-agendamentos", {
-      body: { password: pass, action: "list", totp_code: totp },
+      body: { password: pass, action: "list" },
     });
     if (error || data?.error) {
       toast.error(data?.error || "Erro ao carregar agendamentos");
-      if (data?.error === "Senha incorreta" || data?.error === "Código 2FA inválido") {
+      if (data?.error === "Senha incorreta") {
         setLoginStep("password");
       }
     } else {
@@ -68,7 +67,7 @@ const Admin = () => {
     setLoading(true);
 
     const { data, error } = await supabase.functions.invoke("admin-agendamentos", {
-      body: { password: senha, action: "login-check" },
+      body: { password: senha, action: "list" },
     });
 
     if (error || data?.error) {
@@ -88,37 +87,7 @@ const Admin = () => {
     }
 
     setSenhaArmazenada(senha);
-
-    if (data?.requires2fa) {
-      setLoginStep("totp");
-      setLoading(false);
-      return;
-    }
-
-    // No 2FA, go straight to authenticated
     setTentativas(0);
-    setLoginStep("authenticated");
-    setAgendamentos(data.data || []);
-    setLoading(false);
-  };
-
-  const handleTotpSubmit = async () => {
-    if (!totpCode || bloqueado) return;
-    setLoading(true);
-
-    const { data, error } = await supabase.functions.invoke("admin-agendamentos", {
-      body: { password: senhaArmazenada, action: "list", totp_code: totpCode },
-    });
-
-    if (error || data?.error) {
-      const msg = data?.error || "Código inválido";
-      toast.error(msg);
-      setLoading(false);
-      return;
-    }
-
-    setTentativas(0);
-    setTotpArmazenado(totpCode);
     setLoginStep("authenticated");
     setAgendamentos(data.data || []);
     setLoading(false);
@@ -127,7 +96,7 @@ const Admin = () => {
   const handleDelete = async (id: string) => {
     if (!confirm("Tem certeza que deseja cancelar este agendamento e liberar o horário?")) return;
     const { data, error } = await supabase.functions.invoke("admin-agendamentos", {
-      body: { password: senhaArmazenada, action: "delete", id, totp_code: totpArmazenado },
+      body: { password: senhaArmazenada, action: "delete", id },
     });
     if (error || data?.error) {
       toast.error("Erro ao deletar");
@@ -144,7 +113,7 @@ const Admin = () => {
 
   const handleEditSave = async (id: string) => {
     const { data, error } = await supabase.functions.invoke("admin-agendamentos", {
-      body: { password: senhaArmazenada, action: "update", id, updates: { servico: editServico }, totp_code: totpArmazenado },
+      body: { password: senhaArmazenada, action: "update", id, updates: { servico: editServico } },
     });
     if (error || data?.error) {
       toast.error("Erro ao atualizar");
@@ -221,48 +190,6 @@ const Admin = () => {
     );
   }
 
-  // TOTP STEP
-  if (loginStep === "totp") {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="w-full max-w-sm space-y-6">
-          <div className="text-center">
-            <div className="mx-auto w-16 h-16 rounded-full bg-card flex items-center justify-center mb-4">
-              <KeyRound className="w-8 h-8 text-gold" />
-            </div>
-            <h1 className="text-gold text-2xl font-bold">Verificação 2FA</h1>
-            <p className="text-muted-foreground text-sm mt-1">Digite o código do seu app autenticador</p>
-          </div>
-          <div className="space-y-3">
-            <input
-              type="text"
-              inputMode="numeric"
-              maxLength={6}
-              placeholder="000000"
-              value={totpCode}
-              onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-              onKeyDown={(e) => e.key === "Enter" && handleTotpSubmit()}
-              className="w-full p-3.5 rounded-xl border-none bg-card text-foreground text-center text-2xl tracking-[0.5em] font-mono placeholder:text-muted-foreground placeholder:tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-ring"
-            />
-            <button
-              onClick={handleTotpSubmit}
-              disabled={loading || totpCode.length !== 6}
-              className="w-full py-3.5 rounded-xl gradient-gold text-primary-foreground font-bold text-sm disabled:opacity-50"
-            >
-              {loading ? "Verificando..." : "Entrar"}
-            </button>
-            <button
-              onClick={() => { setLoginStep("password"); setSenha(""); setTotpCode(""); }}
-              className="w-full text-muted-foreground text-xs hover:text-foreground transition-colors"
-            >
-              Voltar
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // AUTHENTICATED - DASHBOARD
   return (
     <div className="min-h-screen bg-background p-4">
@@ -270,7 +197,7 @@ const Admin = () => {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-gold text-xl font-bold">Painel Admin</h1>
           <button
-            onClick={() => { setLoginStep("password"); setSenha(""); setSenhaArmazenada(""); setTotpCode(""); setTotpArmazenado(""); }}
+            onClick={() => { setLoginStep("password"); setSenha(""); setSenhaArmazenada(""); }}
             className="flex items-center gap-1 text-muted-foreground text-sm hover:text-foreground transition-colors"
           >
             <LogOut className="w-4 h-4" /> Sair
@@ -317,7 +244,7 @@ const Admin = () => {
 
         <div className="flex items-center justify-between mb-4">
           <button
-            onClick={() => fetchAgendamentos(senhaArmazenada, totpArmazenado)}
+            onClick={() => fetchAgendamentos(senhaArmazenada)}
             disabled={loading}
             className="px-4 py-2 rounded-lg bg-card text-foreground text-sm hover:scale-105 transition-transform disabled:opacity-50"
           >
