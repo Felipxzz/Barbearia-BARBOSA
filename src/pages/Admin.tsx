@@ -265,6 +265,11 @@ const Admin = () => {
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-gold font-bold text-sm">{a.dia}</span>
                     <span className="text-foreground font-bold text-sm">{a.horario}</span>
+                    {a.obs?.includes("Plano Mensal") && (
+                      <span className="bg-gold/20 text-gold text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        📋 PLANO MENSAL
+                      </span>
+                    )}
                   </div>
                   <p className="text-foreground text-sm"><strong>Cliente:</strong> {a.nome}</p>
                   <p className="text-muted-foreground text-xs">Tel: {a.telefone}</p>

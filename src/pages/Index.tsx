@@ -82,20 +82,42 @@ const Index = () => {
 
     setLoading(true);
 
-    // Salvar no banco
-    const { error } = await supabase.from("agendamentos").insert({
+    const servicoTexto = servicos.map((id) => SERVICOS.find((s) => s.id === id)?.nome).join(", ");
+    const isPlano = servicos.includes("plano");
+
+    // Se plano mensal, agendar para todas as semanas do mês (mesmo dia da semana)
+    let datasParaAgendar = [dia];
+    if (isPlano) {
+      const dataBase = new Date(dia + "T12:00:00");
+      const diaSemana = dataBase.getDay();
+      const mes = dataBase.getMonth();
+      const ano = dataBase.getFullYear();
+      const todasDatas: string[] = [];
+      const d = new Date(ano, mes, 1);
+      while (d.getMonth() === mes) {
+        if (d.getDay() === diaSemana) {
+          todasDatas.push(d.toISOString().split("T")[0]);
+        }
+        d.setDate(d.getDate() + 1);
+      }
+      datasParaAgendar = todasDatas;
+    }
+
+    const inserts = datasParaAgendar.map((diaAgendar) => ({
       nome,
       telefone,
-      servico: servicos.map((id) => SERVICOS.find((s) => s.id === id)?.nome).join(", "),
+      servico: servicoTexto,
       barbeiro,
-      dia,
+      dia: diaAgendar,
       horario,
-      obs,
-    });
+      obs: isPlano ? `${obs ? obs + " | " : ""}Plano Mensal` : obs,
+    }));
+
+    const { error } = await supabase.from("agendamentos").insert(inserts);
 
     if (error) {
       if (error.code === "23505") {
-        toast.error("Este horário já foi reservado! Escolha outro.");
+        toast.error("Um dos horários já foi reservado! Escolha outro.");
       } else {
         toast.error("Erro ao agendar. Tente novamente.");
       }
@@ -112,14 +134,16 @@ const Index = () => {
 
     const servicosTexto = servicosInfo.map((s) => `${s!.nome} - ${s!.preco}`).join(", ");
 
+    const datasTexto = isPlano ? datasParaAgendar.join(", ") : dia;
+
     const mensagem = `Olá, gostaria de agendar na Barbearia Barbosa.
 Nome: ${nome}
 Telefone: ${telefone}
 Serviço(s): ${servicosTexto}
 Barbeiro: ${barbeiroInfo?.nome}
-Data: ${dia}
+Data(s): ${datasTexto}
 Horário: ${horario}
-OBS: ${obs}`;
+${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}OBS: ${obs}`;
 
     window.open(
       `https://wa.me/${telefoneBarbearia}?text=${encodeURIComponent(mensagem)}`,
