@@ -134,14 +134,16 @@ const Index = () => {
 
     const servicosTexto = servicosInfo.map((s) => `${s!.nome} - ${s!.preco}`).join(", ");
 
+    const datasTexto = isPlano ? datasParaAgendar.join(", ") : dia;
+
     const mensagem = `Olá, gostaria de agendar na Barbearia Barbosa.
 Nome: ${nome}
 Telefone: ${telefone}
 Serviço(s): ${servicosTexto}
 Barbeiro: ${barbeiroInfo?.nome}
-Data: ${dia}
+Data(s): ${datasTexto}
 Horário: ${horario}
-OBS: ${obs}`;
+${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}OBS: ${obs}`;
 
     window.open(
       `https://wa.me/${telefoneBarbearia}?text=${encodeURIComponent(mensagem)}`,
