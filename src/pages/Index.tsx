@@ -30,7 +30,13 @@ const Index = () => {
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [obs, setObs] = useState("");
-  const [servico, setServico] = useState("");
+  const [servicos, setServicos] = useState<string[]>([]);
+
+  const toggleServico = (id: string) => {
+    setServicos((prev) =>
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+    );
+  };
   const [barbeiro, setBarbeiro] = useState("");
   const [dia, setDia] = useState("");
   const [horario, setHorario] = useState("");
