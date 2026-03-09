@@ -125,7 +125,9 @@ const Admin = () => {
   };
 
   const agendamentosFiltrados = useMemo(() => {
+    const hoje = new Date().toISOString().split("T")[0];
     return agendamentos.filter((a) => {
+      if (a.dia < hoje) return false;
       if (filtroBarbeiro && a.barbeiro.toLowerCase() !== filtroBarbeiro.toLowerCase()) return false;
       if (filtroDia && a.dia !== filtroDia) return false;
       return true;
