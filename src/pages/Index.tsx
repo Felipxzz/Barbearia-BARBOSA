@@ -11,14 +11,14 @@ import HorarioSelector from "@/components/HorarioSelector";
 import BotaoAgendar from "@/components/BotaoAgendar";
 
 const SERVICOS = [
-  { id: "corte", nome: "Corte", preco: "R$30" },
-  { id: "plano", nome: "Plano Mensal", preco: "R$70" },
-  { id: "pezinho", nome: "Pezinho", preco: "R$10" },
-  { id: "barba", nome: "Barba", preco: "R$15" },
-  { id: "corte-barba", nome: "Corte + Barba", preco: "R$40" },
-  { id: "pigmentacao", nome: "Pigmentação", preco: "R$15" },
-  { id: "luzes", nome: "Luzes", preco: "R$100" },
-  { id: "platinado", nome: "Platinado", preco: "R$120" },
+  { id: "corte", nome: "Corte", preco: "R$30", valor: 30 },
+  { id: "plano", nome: "Plano Mensal", preco: "R$70", valor: 70 },
+  { id: "pezinho", nome: "Pezinho", preco: "R$10", valor: 10 },
+  { id: "barba", nome: "Barba", preco: "R$15", valor: 15 },
+  { id: "corte-barba", nome: "Corte + Barba", preco: "R$40", valor: 40 },
+  { id: "pigmentacao", nome: "Pigmentação", preco: "R$15", valor: 15 },
+  { id: "luzes", nome: "Luzes", preco: "R$100", valor: 100 },
+  { id: "platinado", nome: "Platinado", preco: "R$120", valor: 120 },
 ];
 
 const BARBEIROS = [
@@ -163,7 +163,11 @@ OBS: ${obs}`;
           />
         )}
       </div>
-      <BotaoAgendar onClick={handleAgendar} disabled={loading} />
+      <BotaoAgendar
+        onClick={handleAgendar}
+        disabled={loading}
+        totalPreco={servicos.reduce((sum, id) => sum + (SERVICOS.find((s) => s.id === id)?.valor ?? 0), 0)}
+      />
     </div>
   );
 };
