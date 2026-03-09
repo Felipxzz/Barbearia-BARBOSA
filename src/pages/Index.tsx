@@ -75,7 +75,7 @@ const Index = () => {
   }, [barbeiro, dia]);
 
   const handleAgendar = async () => {
-    if (!nome || !telefone || !servico || !barbeiro || !dia || !horario) {
+    if (!nome || !telefone || servicos.length === 0 || !barbeiro || !dia || !horario) {
       toast.error("Preencha todas as informações!");
       return;
     }
@@ -86,7 +86,7 @@ const Index = () => {
     const { error } = await supabase.from("agendamentos").insert({
       nome,
       telefone,
-      servico,
+      servico: servicos.map((id) => SERVICOS.find((s) => s.id === id)?.nome).join(", "),
       barbeiro,
       dia,
       horario,
@@ -106,14 +106,20 @@ const Index = () => {
     // Atualizar horários ocupados
     setHorariosOcupados((prev) => [...prev, horario]);
 
-    const servicoInfo = SERVICOS.find((s) => s.id === servico);
+    const servicosInfo = servicos.map((id) => SERVICOS.find((s) => s.id === id)).filter(Boolean);
     const barbeiroInfo = BARBEIROS.find((b) => b.id === barbeiro);
     const telefoneBarbearia = barbeiro === "ryan" ? "15991566902" : "15997451750";
+
+    const servicosTexto = servicosInfo.map((s) => `${s!.nome} - ${s!.preco}`).join(", ");
 
     const mensagem = `Olá, gostaria de agendar na Barbearia Barbosa.
 Nome: ${nome}
 Telefone: ${telefone}
-Serviço: ${servicoInfo?.nome} - ${servicoInfo?.preco}
+Serviço(s): ${servicosTexto}
+Barbeiro: ${barbeiroInfo?.nome}
+Data: ${dia}
+Horário: ${horario}
+OBS: ${obs}`;
 Barbeiro: ${barbeiroInfo?.nome}
 Data: ${dia}
 Horário: ${horario}
@@ -143,8 +149,8 @@ OBS: ${obs}`;
         />
         <ServicoSelector
           servicos={SERVICOS}
-          selected={servico}
-          onSelect={setServico}
+          selected={servicos}
+          onToggle={toggleServico}
         />
         <BarbeiroSelector
           barbeiros={BARBEIROS}
