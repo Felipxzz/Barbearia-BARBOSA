@@ -120,10 +120,6 @@ Barbeiro: ${barbeiroInfo?.nome}
 Data: ${dia}
 Horário: ${horario}
 OBS: ${obs}`;
-Barbeiro: ${barbeiroInfo?.nome}
-Data: ${dia}
-Horário: ${horario}
-OBS: ${obs}`;
 
     window.open(
       `https://wa.me/${telefoneBarbearia}?text=${encodeURIComponent(mensagem)}`,
