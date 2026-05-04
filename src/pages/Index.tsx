@@ -160,7 +160,6 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
       <HeroSection />
       <div className="max-w-lg mx-auto px-4 py-6 space-y-8">
         <GaleriaCortes />
-        <SobreTCC />
         <FormDados
           nome={nome}
           setNome={setNome}
@@ -188,6 +187,7 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
             horariosOcupados={horariosOcupados}
           />
         )}
+        <SobreTCC />
       </div>
       <BotaoAgendar
         onClick={handleAgendar}
