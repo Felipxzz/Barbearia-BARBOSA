@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import HeroSection from "@/components/HeroSection";
 import GaleriaCortes from "@/components/GaleriaCortes";
+import SobreTCC from "@/components/SobreTCC";
 import FormDados from "@/components/FormDados";
 import ServicoSelector from "@/components/ServicoSelector";
 import BarbeiroSelector from "@/components/BarbeiroSelector";
@@ -159,6 +160,7 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
       <HeroSection />
       <div className="max-w-lg mx-auto px-4 py-6 space-y-8">
         <GaleriaCortes />
+        <SobreTCC />
         <FormDados
           nome={nome}
           setNome={setNome}
