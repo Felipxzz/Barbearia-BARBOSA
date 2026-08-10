@@ -70,35 +70,50 @@ const Admin = () => {
   }, []);
 
   const handlePasswordSubmit = async () => {
-    if (!senha || bloqueado) return;
+    const pass = senha.trim();
+    if (!pass || bloqueado) return;
     setLoading(true);
 
     const { data, error } = await supabase.functions.invoke("admin-agendamentos", {
-      body: { password: senha, action: "list" },
+      body: { password: pass, action: "list" },
     });
 
-    if (error || data?.error) {
-      const msg = data?.error || "Erro ao autenticar";
-      const newTentativas = tentativas + 1;
-      setTentativas(newTentativas);
+    let serverMsg = data?.error as string | undefined;
+    if (!serverMsg && error) {
+      try {
+        const ctx = (error as { context?: Response }).context;
+        if (ctx && typeof ctx.json === "function") {
+          const j = await ctx.json();
+          serverMsg = j?.error;
+        }
+      } catch { /* ignore */ }
+    }
 
-      if (msg.includes("Muitas tentativas") || newTentativas >= 5) {
+    if (error || serverMsg) {
+      const msg = serverMsg || "Erro de conexão. Tente novamente.";
+
+      if (msg.includes("Muitas tentativas")) {
         setBloqueado(true);
         toast.error("Bloqueado por muitas tentativas. Aguarde 15 minutos.");
         setTimeout(() => { setBloqueado(false); setTentativas(0); }, 15 * 60 * 1000);
+      } else if (msg === "Senha incorreta") {
+        const n = tentativas + 1;
+        setTentativas(n);
+        toast.error(`Senha incorreta (${Math.max(0, 5 - n)} tentativas restantes)`);
       } else {
-        toast.error(`${msg} (${5 - newTentativas} tentativas restantes)`);
+        toast.error(msg);
       }
       setLoading(false);
       return;
     }
 
-    setSenhaArmazenada(senha);
+    setSenhaArmazenada(pass);
     setTentativas(0);
     setLoginStep("authenticated");
     setAgendamentos(data.data || []);
     setLoading(false);
   };
+
 
   const handleDelete = async (id: string) => {
     if (!confirm("Tem certeza que deseja cancelar este agendamento e liberar o horário?")) return;
