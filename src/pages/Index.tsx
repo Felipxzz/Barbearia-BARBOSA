@@ -23,7 +23,7 @@ const SERVICOS = [
 ];
 
 const BARBEIROS = [
-  { id: "murilo", nome: "Murilo" },
+  { id: "kauan", nome: "Kauan" },
   { id: "ryan", nome: "Ryan" },
 ];
 
