@@ -158,7 +158,10 @@ const Admin = () => {
   const enviarLembrete = (a: Agendamento) => {
     const tel = a.telefone.replace(/\D/g, "");
     const numero = tel.length <= 11 ? `55${tel}` : tel;
-    const msg = `Olá ${a.nome}! Lembrete da Barbearia Barbosa: seu horário é hoje às ${a.horario} com ${a.barbeiro}. Serviço: ${a.servico}. Pode confirmar sua presença?`;
+    const hoje = new Date().toISOString().split("T")[0];
+    const [ano, mes, dia] = a.dia.split("-");
+    const quando = a.dia === hoje ? "hoje" : `dia ${dia}/${mes}/${ano}`;
+    const msg = `Olá ${a.nome}! Lembrete da Barbearia Barbosa: seu horário é ${quando} às ${a.horario} com ${a.barbeiro}. Serviço: ${a.servico}. Pode confirmar sua presença?`;
     window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`, "_blank");
   };
 
@@ -360,6 +363,14 @@ const Admin = () => {
                   )}
 
                   {a.obs && <p className="text-muted-foreground text-xs">OBS: {a.obs}</p>}
+
+                  <button
+                    onClick={() => enviarLembrete(a)}
+                    className="mt-2 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg gradient-gold text-primary-foreground text-xs font-bold"
+                    title="Abrir WhatsApp com a mensagem de lembrete pronta"
+                  >
+                    <BellRing className="w-3.5 h-3.5" /> Enviar lembrete
+                  </button>
                 </div>
                 <button
                   onClick={() => handleDelete(a.id)}
