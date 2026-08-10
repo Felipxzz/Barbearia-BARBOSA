@@ -14,7 +14,7 @@ const SERVICOS = [
   { id: "platinado", nome: "Platinado", preco: "R$120" },
 ];
 
-const BARBEIROS = ["Murilo", "Ryan"];
+const BARBEIROS = ["Kauan", "Ryan"];
 
 interface Agendamento {
   id: string;
