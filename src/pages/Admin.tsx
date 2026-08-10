@@ -360,6 +360,14 @@ const Admin = () => {
                   )}
 
                   {a.obs && <p className="text-muted-foreground text-xs">OBS: {a.obs}</p>}
+
+                  <button
+                    onClick={() => enviarLembrete(a)}
+                    className="mt-2 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg gradient-gold text-primary-foreground text-xs font-bold"
+                    title="Abrir WhatsApp com a mensagem de lembrete pronta"
+                  >
+                    <BellRing className="w-3.5 h-3.5" /> Enviar lembrete
+                  </button>
                 </div>
                 <button
                   onClick={() => handleDelete(a.id)}
