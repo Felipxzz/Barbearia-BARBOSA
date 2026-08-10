@@ -1,7 +1,7 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Trash2, LogOut, Lock, Pencil, X, Check, ShieldAlert, Filter } from "lucide-react";
+import { Trash2, LogOut, Lock, Pencil, X, Check, ShieldAlert, Filter, BellRing } from "lucide-react";
 
 const SERVICOS = [
   { id: "corte", nome: "Corte", preco: "R$30" },
@@ -41,6 +41,13 @@ const Admin = () => {
   const [editServico, setEditServico] = useState("");
   const [tentativas, setTentativas] = useState(0);
   const [bloqueado, setBloqueado] = useState(false);
+  const [tick, setTick] = useState(0);
+
+  // Atualiza os lembretes a cada minuto
+  useEffect(() => {
+    const t = setInterval(() => setTick((v) => v + 1), 60000);
+    return () => clearInterval(t);
+  }, []);
 
   // Filters
   const [filtroBarbeiro, setFiltroBarbeiro] = useState("");
@@ -226,6 +233,34 @@ const Admin = () => {
             <LogOut className="w-4 h-4" /> Sair
           </button>
         </div>
+
+        {/* Lembretes 1h antes */}
+        {lembretes.length > 0 && (
+          <div className="bg-card rounded-xl p-4 mb-4 border border-gold-subtle">
+            <div className="flex items-center gap-2 text-gold text-sm font-bold mb-3">
+              <BellRing className="w-4 h-4" />
+              <span>Lembretes — próxima 1 hora</span>
+            </div>
+            <div className="space-y-2">
+              {lembretes.map(({ a, minutos }) => (
+                <div key={a.id} className="flex items-center justify-between gap-3">
+                  <div className="text-sm">
+                    <p className="text-foreground font-medium">{a.nome} — {a.horario}</p>
+                    <p className="text-muted-foreground text-xs">
+                      em {minutos} min · {a.barbeiro} · {a.servico}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => enviarLembrete(a)}
+                    className="px-3 py-2 rounded-lg gradient-gold text-primary-foreground text-xs font-bold whitespace-nowrap"
+                  >
+                    Enviar lembrete
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Filters */}
         <div className="bg-card rounded-xl p-4 mb-4 space-y-3">
