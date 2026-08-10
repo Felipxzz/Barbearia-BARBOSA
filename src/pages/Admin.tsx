@@ -134,6 +134,27 @@ const Admin = () => {
     });
   }, [agendamentos, filtroBarbeiro, filtroDia]);
 
+  // Lembretes: agendamentos que começam na próxima 1 hora
+  const lembretes = useMemo(() => {
+    const agora = new Date();
+    return agendamentos
+      .map((a) => {
+        const [h, m] = a.horario.split(":").map(Number);
+        const quando = new Date(`${a.dia}T00:00:00`);
+        quando.setHours(h, m || 0, 0, 0);
+        return { a, quando, minutos: Math.round((quando.getTime() - agora.getTime()) / 60000) };
+      })
+      .filter((x) => x.minutos >= 0 && x.minutos <= 60)
+      .sort((x, y) => x.minutos - y.minutos);
+  }, [agendamentos, tick]);
+
+  const enviarLembrete = (a: Agendamento) => {
+    const tel = a.telefone.replace(/\D/g, "");
+    const numero = tel.length <= 11 ? `55${tel}` : tel;
+    const msg = `Olá ${a.nome}! Lembrete da Barbearia Barbosa: seu horário é hoje às ${a.horario} com ${a.barbeiro}. Serviço: ${a.servico}. Pode confirmar sua presença?`;
+    window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`, "_blank");
+  };
+
   // Unique days for the filter
   const diasDisponiveis = useMemo(() => {
     const s = new Set(agendamentos.map((a) => a.dia));
