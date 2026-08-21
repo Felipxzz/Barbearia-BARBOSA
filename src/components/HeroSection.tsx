@@ -6,7 +6,7 @@ const HeroSection = () => (
     <div className="absolute inset-0 bg-gradient-to-b from-background/60 to-background" />
     <div className="relative z-10">
       <h1 className="text-3xl font-black text-gold tracking-tight">💈 Barbearia Barbosa</h1>
-      <p className="text-muted-foreground mt-1">Seu estilo começa aqui</p>
+      <p className="text-muted-foreground mt-1">VAMOS CONTINUAR AS ATUALIZACOES NA MINHA BARBEARIA BARBOSA</p>
     </div>
   </div>
 );
