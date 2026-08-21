@@ -16,7 +16,7 @@ const SobreTCC = () => (
     <div className="space-y-2">
       <h3 className="text-foreground font-bold text-sm">📌 Resumo e Objetivo</h3>
       <p className="text-muted-foreground text-sm leading-relaxed">
-        O <strong className="text-foreground">Sistema de Agendamento da Barbearia Barbosa</strong> é
+        VAMOS CONTINUAR AS ATUALIZACOES NA MINHA BARBEARIA BARBOSA é
         uma aplicação web desenvolvida para digitalizar e otimizar o processo de marcação de horários.
         O objetivo é eliminar conflitos de agenda, reduzir o trabalho manual do barbeiro e oferecer ao
         cliente uma experiência rápida, intuitiva e disponível 24 horas por dia.
