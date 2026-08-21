@@ -175,8 +175,17 @@ const Admin = () => {
     const numero = tel.length <= 11 ? `55${tel}` : tel;
     const hoje = new Date().toISOString().split("T")[0];
     const [ano, mes, dia] = a.dia.split("-");
-    const quando = a.dia === hoje ? "hoje" : `dia ${dia}/${mes}/${ano}`;
-    const msg = `Olá ${a.nome}! Lembrete da Barbearia Barbosa: seu horário é ${quando} às ${a.horario} com ${a.barbeiro}. Serviço: ${a.servico}. Pode confirmar sua presença?`;
+    const quando = a.dia === hoje ? "hoje" : `em ${dia}/${mes}/${ano}`;
+    const msg =
+      `Barbearia Barbosa\n` +
+      `──────────────\n` +
+      `Olá, ${a.nome}! Tudo bem?\n\n` +
+      `Este é um lembrete do seu agendamento ${quando}, às ${a.horario}h, com o barbeiro ${a.barbeiro}.\n` +
+      `Serviço: ${a.servico}\n\n` +
+      `Pedimos a gentileza de confirmar sua presença respondendo esta mensagem.\n` +
+      `Caso precise remarcar ou cancelar, avise-nos com antecedência.\n\n` +
+      `Agradecemos a preferência!\n` +
+      `Barbearia Barbosa ✂️`;
     window.open(`https://wa.me/${numero}?text=${encodeURIComponent(msg)}`, "_blank");
   };
 
