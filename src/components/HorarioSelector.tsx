@@ -24,19 +24,20 @@ const HorarioSelector = ({ dia, selected, onSelect, horariosOcupados }: Props) =
     <section>
       <h2 className="text-gold text-lg font-bold mb-3">Horários Disponíveis</h2>
       <div className="grid grid-cols-3 gap-2.5">
-        {horarios.map((h) => {
+        {horarios.map((h, i) => {
           const ocupado = horariosOcupados.includes(h);
           return (
             <button
               key={h}
               onClick={() => !ocupado && onSelect(h)}
               disabled={ocupado}
-              className={`py-3 rounded-lg text-sm transition-all duration-200 ${
+              style={{ animationDelay: `${i * 40}ms` }}
+              className={`card-anim py-3 rounded-lg text-sm border border-transparent ${
                 ocupado
                   ? "bg-muted text-muted-foreground line-through opacity-50 cursor-not-allowed"
                   : selected === h
-                  ? "gradient-gold text-primary-foreground font-bold"
-                  : "bg-card text-foreground hover:scale-105"
+                  ? "gradient-gold text-primary-foreground font-bold card-selected"
+                  : "bg-card text-foreground"
               }`}
             >
               {h}

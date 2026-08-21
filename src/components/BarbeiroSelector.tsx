@@ -21,20 +21,21 @@ const BarbeiroSelector = ({ barbeiros, selected, onSelect }: Props) => (
   <section>
     <h2 className="text-gold text-lg font-bold mb-3">Escolha o Barbeiro</h2>
     <div className="flex flex-col gap-2.5">
-      {barbeiros.map((b) => (
+      {barbeiros.map((b, i) => (
         <button
           key={b.id}
           onClick={() => onSelect(b.id)}
-          className={`p-4 rounded-xl text-left text-sm font-medium transition-all duration-200 border flex items-center gap-3 ${
+          style={{ animationDelay: `${i * 80}ms` }}
+          className={`card-anim group p-4 rounded-xl text-left text-sm font-medium border flex items-center gap-3 ${
             selected === b.id
-              ? "gradient-gold text-primary-foreground border-transparent font-bold"
-              : "bg-card text-foreground border-gold-subtle hover:scale-[1.02]"
+              ? "gradient-gold text-primary-foreground border-transparent font-bold card-selected"
+              : "bg-card text-foreground border-gold-subtle"
           }`}
         >
           {FOTOS[b.id] ? (
-            <img src={FOTOS[b.id]} alt={b.nome} className="w-12 h-12 rounded-full object-cover" />
+            <img src={FOTOS[b.id]} alt={b.nome} className="w-12 h-12 rounded-full object-cover transition-transform duration-300 group-hover:scale-110" />
           ) : (
-            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12">
               <Scissors className="w-5 h-5" />
             </div>
           )}
