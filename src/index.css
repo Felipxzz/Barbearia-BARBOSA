@@ -82,4 +82,60 @@
   .border-gold-subtle {
     border-color: hsl(var(--gold) / 0.2);
   }
+
+  /* ---- Animações dos cards ---- */
+  @keyframes card-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes gold-pulse {
+    0%,
+    100% {
+      box-shadow: 0 6px 22px hsl(var(--gold) / 0.35);
+    }
+    50% {
+      box-shadow: 0 6px 30px hsl(var(--gold) / 0.6);
+    }
+  }
+
+  .card-anim {
+    opacity: 0;
+    animation: card-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.25s ease, border-color 0.25s ease;
+    will-change: transform;
+  }
+
+  .card-anim:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.025);
+    box-shadow: 0 10px 26px hsl(var(--gold) / 0.22);
+    border-color: hsl(var(--gold) / 0.55);
+  }
+
+  .card-anim:active:not(:disabled) {
+    transform: translateY(0) scale(0.97);
+  }
+
+  .card-selected {
+    animation: card-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+      gold-pulse 2.4s ease-in-out 0.45s infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-anim,
+    .card-selected {
+      animation: none;
+      opacity: 1;
+    }
+    .card-anim:hover:not(:disabled) {
+      transform: none;
+    }
+  }
 }
