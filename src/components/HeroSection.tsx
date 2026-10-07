@@ -1,14 +1,18 @@
 import heroBg from "@/assets/hero-bg.jpeg";
+import { ArrowUpRight, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const HeroSection = () => (
-  <div className="relative h-48 flex items-center justify-center flex-col text-center overflow-hidden">
-    <img src={heroBg} alt="Barbearia Barbosa" className="absolute inset-0 w-full h-full object-cover" />
-    <div className="absolute inset-0 bg-gradient-to-b from-background/60 to-background" />
-    <div className="relative z-10">
-      <h1 className="text-3xl font-black text-gold tracking-tight">💈 Barbearia Barbosa</h1>
-      <p className="text-muted-foreground mt-1">VAMOS CONTINUAR AS ATUALIZACOES NA MINHA BARBEARIA BARBOSA</p>
+  <section id="inicio" className="barbosa-hero">
+    <img src={heroBg} alt="Barbearia Barbosa" className="barbosa-hero-image" />
+    <div className="barbosa-hero-shade" />
+    <div className="barbosa-container relative z-10 w-full">
+      <span className="barbosa-hero-badge"><Star /> ESTILO E TRADIÇÃO</span>
+      <h1>BARBEARIA BARBOSA.<br />SEU CORTE,<br /><span className="text-primary">SUA IDENTIDADE.</span></h1>
+      <p>O estilo é levado a sério e o resultado é sempre de respeito. Vem ficar na régua com a gente.</p>
+      <Button asChild className="barbosa-cta"><a href="#planos">CONHECER O PLANO MENSAL <ArrowUpRight /></a></Button>
     </div>
-  </div>
+  </section>
 );
 
 export default HeroSection;

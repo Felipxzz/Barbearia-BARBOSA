@@ -2,7 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import HeroSection from "@/components/HeroSection";
-import GaleriaCortes from "@/components/GaleriaCortes";
+import { BarbosaHeader, BarbosaSections, BarbosaFooter } from "@/components/BarbosaPresentation";
+import "@/styles/barbosa.css";
 import SobreTCC from "@/components/SobreTCC";
 import FormDados from "@/components/FormDados";
 import ServicoSelector from "@/components/ServicoSelector";
@@ -28,6 +29,13 @@ const BARBEIROS = [
 ];
 
 const Index = () => {
+  useEffect(() => {
+    const fontLink = document.createElement("link");
+    fontLink.rel = "stylesheet";
+    fontLink.href = "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&display=swap";
+    document.head.appendChild(fontLink);
+    return () => { fontLink.remove(); };
+  }, []);
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [obs, setObs] = useState("");
@@ -133,7 +141,7 @@ const Index = () => {
     const barbeiroInfo = BARBEIROS.find((b) => b.id === barbeiro);
     const telefoneBarbearia = barbeiro === "ryan" ? "15991566902" : "15997451750";
 
-    const servicosTexto = servicosInfo.map((s) => `${s!.nome} - ${s!.preco}`).join(", ");
+    const servicosTexto = servicosInfo.map((s) => s ? `${s.nome} - ${s.preco}` : "").filter(Boolean).join(", ");
 
     const datasTexto = isPlano ? datasParaAgendar.join(", ") : dia;
 
@@ -156,10 +164,15 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
   };
 
   return (
-    <div className="min-h-screen bg-background pb-28">
+    <div className="barbosa-site min-h-screen">
+      <BarbosaHeader />
       <HeroSection />
-      <div className="max-w-lg mx-auto px-4 py-6 space-y-8">
-        <GaleriaCortes />
+      <BarbosaSections onChooseService={(id) => setServicos([id])} />
+      <section id="agendamento" className="barbosa-booking">
+      <div className="barbosa-container">
+      <div className="barbosa-booking-layout">
+      <div className="barbosa-booking-summary"><span className="barbosa-eyebrow">RESERVE SEU HORÁRIO</span><h2>SEU PRÓXIMO CORTE<br /><span className="text-primary">COMEÇA AQUI.</span></h2><p className="barbosa-copy">Barbearia Barbosa • Kauan e Ryan</p></div>
+      <div className="barbosa-booking-form">
         <FormDados
           nome={nome}
           setNome={setNome}
@@ -187,13 +200,17 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
             horariosOcupados={horariosOcupados}
           />
         )}
-        <SobreTCC />
-      </div>
       <BotaoAgendar
         onClick={handleAgendar}
         disabled={loading}
         totalPreco={servicos.reduce((sum, id) => sum + (SERVICOS.find((s) => s.id === id)?.valor ?? 0), 0)}
       />
+      </div>
+      </div>
+      <details className="barbosa-tcc"><summary>Sobre o projeto • Apresentação TCC</summary><SobreTCC /></details>
+      </div>
+      </section>
+      <BarbosaFooter />
     </div>
   );
 };
