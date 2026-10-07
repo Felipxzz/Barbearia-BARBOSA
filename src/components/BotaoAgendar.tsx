@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+
 interface Props {
   onClick: () => void;
   disabled?: boolean;
@@ -5,10 +7,10 @@ interface Props {
 }
 
 const BotaoAgendar = ({ onClick, disabled, totalPreco }: Props) => (
-  <button
+  <Button
     onClick={onClick}
     disabled={disabled}
-    className="fixed bottom-0 left-0 w-full py-5 gradient-gold text-primary-foreground text-xl font-bold tracking-wide shadow-gold transition-transform active:scale-[0.97] z-50 disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center"
+    className="w-full h-auto py-4 text-sm font-bold flex flex-col items-center gap-1"
   >
     {disabled ? "Agendando..." : "Confirmar Agendamento"}
     {totalPreco != null && totalPreco > 0 && (
@@ -16,7 +18,7 @@ const BotaoAgendar = ({ onClick, disabled, totalPreco }: Props) => (
         Total: R${totalPreco}
       </span>
     )}
-  </button>
+  </Button>
 );
 
 export default BotaoAgendar;
