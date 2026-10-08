@@ -5,5 +5,5 @@
 
 # Kauan photo & data package
 - [x] Set Kauan's profile photo from the uploaded image (CDN asset + selectors).
-- [ ] Verify Kauan photo renders on the hosted preview.
-- [ ] Create a ZIP of the project data/files for download.
+- [x] Verify Kauan photo serves on the preview host (CDN URL returns the JPEG, 200 OK).
+- [x] Create a ZIP of the project data/files for download.
