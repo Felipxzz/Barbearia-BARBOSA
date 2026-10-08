@@ -1,4 +1,5 @@
 import ryanImg from "@/assets/ryan.jpeg";
+import kauanImg from "@/assets/kauan.jpeg.asset.json";
 
 import corte1 from "@/assets/corte1.jpeg";
 import corte2 from "@/assets/corte2.jpeg";
