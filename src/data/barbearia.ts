@@ -1,4 +1,5 @@
 import ryanImg from "@/assets/ryan.jpeg";
+import kauanImg from "@/assets/kauan.jpeg.asset.json";
 
 import corte1 from "@/assets/corte1.jpeg";
 import corte2 from "@/assets/corte2.jpeg";
@@ -129,6 +130,7 @@ export const BARBEIROS: Barbeiro[] = [
   {
     id: "kauan",
     nome: "Kauan",
+    foto: kauanImg.url,
     especialidade: "Cortes clássicos e degradê",
     descricao:
       "Atendimento caprichado e acabamento preciso. Referência em degradê e cortes sociais.",
