@@ -130,6 +130,7 @@ export const BARBEIROS: Barbeiro[] = [
   {
     id: "kauan",
     nome: "Kauan",
+    foto: kauanImg.url,
     especialidade: "Cortes clássicos e degradê",
     descricao:
       "Atendimento caprichado e acabamento preciso. Referência em degradê e cortes sociais.",
