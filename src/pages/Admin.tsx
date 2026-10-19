@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import "@/styles/barbosa.css";
 import { Trash2, LogOut, Lock, Pencil, X, Check, ShieldAlert, Filter, BellRing } from "lucide-react";
 
 const SERVICOS = [
@@ -344,7 +345,7 @@ const Admin = () => {
           <p className="text-muted-foreground text-center py-8">Nenhum agendamento encontrado.</p>
         ) : (
           <div className="space-y-3">
-            {agendamentosFiltrados.map((a) => (
+            {agendamentosFiltrados.map((a, i) => (
               <div key={a.id} style={{ animationDelay: `${Math.min(i, 12) * 50}ms` }} className="card-anim bg-card rounded-xl p-4 border border-border flex items-start justify-between gap-3">
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
