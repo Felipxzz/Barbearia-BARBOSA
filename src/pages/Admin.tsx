@@ -209,8 +209,8 @@ const Admin = () => {
   // PASSWORD STEP
   if (loginStep === "password") {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="w-full max-w-sm space-y-6">
+      <div className="barbosa-site min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="card-anim w-full max-w-sm space-y-6 bg-card border border-border rounded-xl p-6">
           <div className="text-center">
             <div className="mx-auto w-16 h-16 rounded-full bg-card flex items-center justify-center mb-4">
               <Lock className="w-8 h-8 text-gold" />
@@ -249,7 +249,7 @@ const Admin = () => {
 
   // AUTHENTICATED - DASHBOARD
   return (
-    <div className="min-h-screen bg-background p-4">
+    <div className="barbosa-site min-h-screen bg-background p-4">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-gold text-xl font-bold">Painel Admin</h1>
@@ -263,7 +263,7 @@ const Admin = () => {
 
         {/* Lembretes 1h antes */}
         {lembretes.length > 0 && (
-          <div className="bg-card rounded-xl p-4 mb-4 border border-gold-subtle">
+          <div className="card-anim bg-card rounded-xl p-4 mb-4 border border-gold-subtle">
             <div className="flex items-center gap-2 text-gold text-sm font-bold mb-3">
               <BellRing className="w-4 h-4" />
               <span>Lembretes — próxima 1 hora</span>
@@ -290,7 +290,7 @@ const Admin = () => {
         )}
 
         {/* Filters */}
-        <div className="bg-card rounded-xl p-4 mb-4 space-y-3">
+        <div className="card-anim bg-card rounded-xl p-4 mb-4 space-y-3 border border-border">
           <div className="flex items-center gap-2 text-muted-foreground text-xs mb-2">
             <Filter className="w-4 h-4" />
             <span>Filtros</span>
@@ -345,7 +345,7 @@ const Admin = () => {
         ) : (
           <div className="space-y-3">
             {agendamentosFiltrados.map((a) => (
-              <div key={a.id} className="bg-card rounded-xl p-4 flex items-start justify-between gap-3">
+              <div key={a.id} style={{ animationDelay: `${Math.min(i, 12) * 50}ms` }} className="card-anim bg-card rounded-xl p-4 border border-border flex items-start justify-between gap-3">
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-gold font-bold text-sm">{a.dia}</span>
