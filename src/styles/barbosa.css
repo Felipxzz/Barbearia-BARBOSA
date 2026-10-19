@@ -1,8 +1,8 @@
 .barbosa-site {
-  --background: 240 9% 2%; --foreground: 0 0% 97%; --card: 240 5% 5%; --card-foreground: 0 0% 97%;
-  --primary: 0 100% 53%; --primary-foreground: 0 0% 100%; --accent: 0 100% 53%; --accent-foreground: 0 0% 100%;
-  --gold: 0 100% 53%; --gold-light: 0 100% 60%; --gold-glow: 0 100% 53%; --border: 0 0% 17%; --input: 0 0% 10%;
-  --muted: 0 0% 12%; --muted-foreground: 0 0% 62%; --ring: 0 100% 53%; --secondary: 0 0% 10%;
+  --background: 240 9% 2%; --card-line: 0 0% 27%; --foreground: 0 0% 97%; --card: 240 5% 5%; --card-foreground: 0 0% 97%;
+  --primary: 1 100% 54%; --primary-foreground: 0 0% 100%; --accent: 1 100% 54%; --accent-foreground: 0 0% 100%;
+  --gold: 1 100% 54%; --gold-light: 1 100% 62%; --gold-glow: 1 100% 54%; --border: 0 0% 17%; --input: 0 0% 10%;
+  --muted: 0 0% 12%; --muted-foreground: 0 0% 62%; --ring: 1 100% 54%; --secondary: 0 0% 10%;
   --light-surface: 0 0% 96%; --light-ink: 240 8% 8%; --whatsapp: 142 76% 42%;
   --hero-shade: linear-gradient(90deg, hsl(var(--background) / .86), hsl(var(--background) / .35)), linear-gradient(0deg, hsl(var(--background)), transparent 40%);
   --cta-shadow: 0 4px 20px hsl(var(--primary) / .28);
@@ -84,3 +84,18 @@
 @media(max-width: 900px) {.barbosa-plan-layout{gap:40px}.barbosa-services{grid-template-columns:repeat(2,1fr)}.barbosa-location{gap:24px}.barbosa-team article{grid-template-columns:90px 1fr}.barbosa-team img,.barbosa-team-placeholder{width:90px;height:130px}.barbosa-booking-layout{gap:40px}.barbosa-footer-grid{grid-template-columns:1fr 1fr}}
 @media(max-width: 600px) {.barbosa-container{width:calc(100% - 36px)}.barbosa-header nav{height:70px}.barbosa-wordmark span{font-size:30px}.barbosa-header-cta{font-size:9px;padding-inline:12px}.barbosa-hero{height:600px;min-height:0;max-height:calc(100svh - 110px)}.barbosa-site h1{font-size:46px}.barbosa-site h2{font-size:42px}.barbosa-hero p{font-size:12px;max-width:320px}.barbosa-section,.barbosa-booking{padding:56px 0}.barbosa-plan-layout,.barbosa-location,.barbosa-about-layout,.barbosa-team,.barbosa-booking-layout{grid-template-columns:1fr;gap:32px}.barbosa-plan{padding:26px}.barbosa-section-heading{display:block}.barbosa-gallery{grid-template-columns:repeat(2,1fr);gap:10px}.barbosa-services{grid-template-columns:1fr}.barbosa-location > div{padding-bottom:24px;border-bottom:1px solid hsl(var(--border))}.barbosa-booking-summary{position:static}.barbosa-team article{grid-template-columns:100px 1fr}.barbosa-team img,.barbosa-team-placeholder{width:100px;height:140px}.barbosa-footer-grid{gap:32px 18px}.barbosa-whatsapp{bottom:16px;right:16px}.barbosa-footer .barbosa-cta{padding-inline:12px;font-size:9px}}
 @media(prefers-reduced-motion:reduce){.barbosa-gallery img{transition:none}.barbosa-gallery a:hover img{transform:none}}.barbosa-admin h1 {font-size: 34px; line-height: 1.1; margin: 0; max-width: none;}
+/* Cards personalizados animados (estilo Hermanos) */
+.barbosa-card {position: relative; overflow: hidden; transition: transform .35s cubic-bezier(.22,1,.36,1), border-color .35s, box-shadow .35s;}
+.barbosa-card::before {content: ""; position: absolute; left: 0; top: 0; height: 3px; width: 0; background: hsl(var(--primary)); transition: width .45s cubic-bezier(.22,1,.36,1);}
+.barbosa-card::after {content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, hsl(var(--primary) / .08) 50%, transparent 70%); transform: translateX(-100%); transition: transform .7s ease; pointer-events: none;}
+.barbosa-card:hover {transform: translateY(-6px); border-color: hsl(var(--primary) / .7); box-shadow: 0 18px 40px hsl(var(--primary) / .18);}
+.barbosa-card:hover::before {width: 100%;}
+.barbosa-card:hover::after {transform: translateX(100%);}
+.barbosa-card svg {transition: transform .35s;}
+.barbosa-card:hover > svg:first-child {transform: rotate(-12deg) scale(1.15);}
+.barbosa-team article.barbosa-card {padding: 16px; border: 1px solid hsl(var(--border)); border-radius: 4px;}
+.barbosa-location > div.barbosa-card {padding: 24px; border: 1px solid hsl(var(--border)); border-radius: 4px; background: hsl(var(--card));}
+.barbosa-gallery a {overflow: hidden;}
+.barbosa-gallery img {transition: transform .6s cubic-bezier(.22,1,.36,1), filter .4s;}
+.barbosa-gallery a:hover img {transform: scale(1.08); filter: brightness(1.1);}
+@media (prefers-reduced-motion: reduce) {.barbosa-card,.barbosa-card::before,.barbosa-card::after,.barbosa-gallery img {transition: none;}}
