@@ -210,7 +210,7 @@ const Admin = () => {
   // PASSWORD STEP
   if (loginStep === "password") {
     return (
-      <div className="barbosa-site min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="barbosa-site barbosa-admin min-h-screen bg-background flex items-center justify-center p-4">
         <div className="card-anim w-full max-w-sm space-y-6 bg-card border border-border rounded-xl p-6">
           <div className="text-center">
             <div className="mx-auto w-16 h-16 rounded-full bg-card flex items-center justify-center mb-4">
@@ -250,7 +250,7 @@ const Admin = () => {
 
   // AUTHENTICATED - DASHBOARD
   return (
-    <div className="barbosa-site min-h-screen bg-background p-4">
+    <div className="barbosa-site barbosa-admin min-h-screen bg-background p-4">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-gold text-xl font-bold">Painel Admin</h1>
