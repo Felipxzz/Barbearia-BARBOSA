@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import HeroSection from "@/components/HeroSection";
-import { BarbosaHeader, BarbosaSections, BarbosaFooter } from "@/components/BarbosaPresentation";
+import { BarbosaHeader, BarbosaSections, BarbosaGallery, BarbosaFooter } from "@/components/BarbosaPresentation";
 import "@/styles/barbosa.css";
 import SobreTCC from "@/components/SobreTCC";
 import FormDados from "@/components/FormDados";
@@ -167,7 +167,6 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
     <div className="barbosa-site min-h-screen">
       <BarbosaHeader />
       <HeroSection />
-      <BarbosaSections onChooseService={(id) => setServicos([id])} />
       <section id="agendamento" className="barbosa-booking">
       <div className="barbosa-container">
       <div className="barbosa-booking-layout">
@@ -210,6 +209,8 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
       <details className="barbosa-tcc"><summary>Sobre o projeto • Apresentação TCC</summary><SobreTCC /></details>
       </div>
       </section>
+      <BarbosaSections onChooseService={(id) => setServicos([id])} />
+      <BarbosaGallery />
       <BarbosaFooter />
     </div>
   );
