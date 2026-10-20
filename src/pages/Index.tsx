@@ -132,6 +132,7 @@ const Index = () => {
       } else {
         toast.error("Erro ao agendar. Tente novamente.");
       }
+      janelaWhats?.close();
       setLoading(false);
       return;
     }
