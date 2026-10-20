@@ -90,6 +90,8 @@ const Index = () => {
     }
 
     setLoading(true);
+    // Abre a janela já no clique para o celular não bloquear o WhatsApp
+    const janelaWhats = window.open("", "_blank");
 
     const servicoTexto = servicos.map((id) => SERVICOS.find((s) => s.id === id)?.nome).join(", ");
     const isPlano = servicos.includes("plano");
@@ -130,6 +132,7 @@ const Index = () => {
       } else {
         toast.error("Erro ao agendar. Tente novamente.");
       }
+      janelaWhats?.close();
       setLoading(false);
       return;
     }
@@ -139,6 +142,7 @@ const Index = () => {
 
     const servicosInfo = servicos.map((id) => SERVICOS.find((s) => s.id === id)).filter(Boolean);
     const barbeiroInfo = BARBEIROS.find((b) => b.id === barbeiro);
+    // Mensagem vai direto para o barbeiro escolhido (Kauan ou Ryan)
     const telefoneBarbearia = barbeiro === "ryan" ? "15991566902" : "15997451750";
 
     const servicosTexto = servicosInfo.map((s) => s ? `${s.nome} - ${s.preco}` : "").filter(Boolean).join(", ");
@@ -154,10 +158,9 @@ Data(s): ${datasTexto}
 Horário: ${horario}
 ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}OBS: ${obs}`;
 
-    window.open(
-      `https://wa.me/${telefoneBarbearia}?text=${encodeURIComponent(mensagem)}`,
-      "_blank"
-    );
+    const urlWhats = `https://wa.me/${telefoneBarbearia}?text=${encodeURIComponent(mensagem)}`;
+    if (janelaWhats && !janelaWhats.closed) janelaWhats.location.href = urlWhats;
+    else window.location.href = urlWhats;
 
     toast.success("Agendamento realizado com sucesso!");
     setLoading(false);
