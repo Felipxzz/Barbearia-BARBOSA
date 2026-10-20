@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import HeroSection from "@/components/HeroSection";
-import { BarbosaHeader, BarbosaSections, BarbosaGallery, BarbosaFooter } from "@/components/BarbosaPresentation";
+import { BarbosaHeader, BarbosaSections, BarbosaReviews, BarbosaGallery, BarbosaFooter } from "@/components/BarbosaPresentation";
 import "@/styles/barbosa.css";
 import SobreTCC from "@/components/SobreTCC";
 import FormDados from "@/components/FormDados";
@@ -90,8 +90,6 @@ const Index = () => {
     }
 
     setLoading(true);
-    // Abre a janela já no clique para o celular não bloquear o WhatsApp
-    const janelaWhats = window.open("", "_blank");
 
     const servicoTexto = servicos.map((id) => SERVICOS.find((s) => s.id === id)?.nome).join(", ");
     const isPlano = servicos.includes("plano");
@@ -113,6 +111,26 @@ const Index = () => {
       }
       datasParaAgendar = todasDatas;
     }
+
+    const servicosInfo = servicos.map((id) => SERVICOS.find((s) => s.id === id)).filter(Boolean);
+    const barbeiroInfo = BARBEIROS.find((b) => b.id === barbeiro);
+    // Mensagem vai direto para o barbeiro escolhido (Kauan ou Ryan)
+    const telefoneBarbearia = barbeiro === "ryan" ? "15991566902" : "15997451750";
+    const servicosTexto = servicosInfo.map((s) => s ? `${s.nome} - ${s.preco}` : "").filter(Boolean).join(", ");
+    const datasTexto = isPlano ? datasParaAgendar.join(", ") : dia;
+
+    const mensagem = `Olá, gostaria de agendar na Barbearia Barbosa.
+Nome: ${nome}
+Telefone: ${telefone}
+Serviço(s): ${servicosTexto}
+Barbeiro: ${barbeiroInfo?.nome}
+Data(s): ${datasTexto}
+Horário: ${horario}
+${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}OBS: ${obs}`;
+
+    // Link direto (wa.me) já preenchido, aberto no clique para o navegador não bloquear
+    const urlWhats = `https://wa.me/${telefoneBarbearia}?text=${encodeURIComponent(mensagem)}`;
+    const janelaWhats = window.open(urlWhats, "_blank");
 
     const inserts = datasParaAgendar.map((diaAgendar) => ({
       nome,
@@ -140,27 +158,8 @@ const Index = () => {
     // Atualizar horários ocupados
     setHorariosOcupados((prev) => [...prev, horario]);
 
-    const servicosInfo = servicos.map((id) => SERVICOS.find((s) => s.id === id)).filter(Boolean);
-    const barbeiroInfo = BARBEIROS.find((b) => b.id === barbeiro);
-    // Mensagem vai direto para o barbeiro escolhido (Kauan ou Ryan)
-    const telefoneBarbearia = barbeiro === "ryan" ? "15991566902" : "15997451750";
-
-    const servicosTexto = servicosInfo.map((s) => s ? `${s.nome} - ${s.preco}` : "").filter(Boolean).join(", ");
-
-    const datasTexto = isPlano ? datasParaAgendar.join(", ") : dia;
-
-    const mensagem = `Olá, gostaria de agendar na Barbearia Barbosa.
-Nome: ${nome}
-Telefone: ${telefone}
-Serviço(s): ${servicosTexto}
-Barbeiro: ${barbeiroInfo?.nome}
-Data(s): ${datasTexto}
-Horário: ${horario}
-${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}OBS: ${obs}`;
-
-    const urlWhats = `https://wa.me/${telefoneBarbearia}?text=${encodeURIComponent(mensagem)}`;
-    if (janelaWhats && !janelaWhats.closed) janelaWhats.location.href = urlWhats;
-    else window.location.href = urlWhats;
+    // Se o navegador bloqueou a janela do WhatsApp, força o link direto (wa.me)
+    if (!janelaWhats || janelaWhats.closed) window.location.href = urlWhats;
 
     toast.success("Agendamento realizado com sucesso!");
     setLoading(false);
@@ -213,6 +212,7 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
       </div>
       </section>
       <BarbosaSections onChooseService={(id) => setServicos([id])} />
+      <BarbosaReviews />
       <BarbosaGallery />
       <BarbosaFooter />
     </div>

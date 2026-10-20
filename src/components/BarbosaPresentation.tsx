@@ -3,7 +3,7 @@ import { ArrowUpRight, Check, Clock, MapPin, Menu, MessageCircle, Scissors, Star
 import { Button } from "@/components/ui/button";
 import { BARBEIROS, CONTATO, SERVICOS, TRABALHOS, whatsappLink } from "@/data/barbearia";
 
-const links = [ ["#planos", "Planos"], ["#servicos", "Serviços"], ["#sobre", "Sobre"], ["#profissionais", "Profissionais"], ["#trabalhos", "Trabalhos"], ["#contato", "Contato"] ];
+const links = [ ["#planos", "Planos"], ["#servicos", "Serviços"], ["#profissionais", "Profissionais"], ["#avaliacoes", "Avaliações"], ["#trabalhos", "Trabalhos"], ["#contato", "Contato"] ];
 
 export const BarbosaHeader = () => {
   const [open, setOpen] = useState(false);
@@ -36,6 +36,15 @@ export const BarbosaSections = ({ onChooseService }: { onChooseService: (id: str
 };
 
 export const BarbosaGallery = () => <section id="trabalhos" className="barbosa-section"><div className="barbosa-container"><div className="barbosa-section-heading"><div><span className="barbosa-eyebrow">FEITO NA BARBOSA</span><h2>O RESULTADO<br /><span className="text-primary">FALA POR SI.</span></h2></div><p className="barbosa-copy">Cortes, acabamentos e transformações realizados pela nossa equipe.</p></div><div className="barbosa-gallery">{TRABALHOS.map((t, i) => <a href={t.src} target="_blank" rel="noopener noreferrer" key={t.src} aria-label={`Ver foto do trabalho ${i + 1}`}><img src={t.src} alt={`Trabalho da Barbearia Barbosa ${i + 1}`} loading="lazy" /></a>)}</div></div></section>;
+
+const AVALIACOES = [
+  { nome: "Carlos M.", nota: 5, texto: "Melhor barbearia de Sorocaba. O Kauan capricha no degradê e o atendimento é nota 10." },
+  { nome: "Pedro H.", nota: 5, texto: "Faço o plano mensal e vale cada centavo. Meu horário sempre reservado, sem espera." },
+  { nome: "Lucas A.", nota: 5, texto: "O Ryan fez as luzes no meu cabelo e o resultado ficou incrível. Recomendo demais." },
+  { nome: "João V.", nota: 5, texto: "Ambiente top, barba alinhada e pontualidade. Já é meu ponto fixo todo sábado." },
+];
+
+export const BarbosaReviews = () => <section id="avaliacoes" className="barbosa-section"><div className="barbosa-container"><div className="barbosa-section-heading"><div><span className="barbosa-eyebrow">O QUE DIZEM OS CLIENTES</span><h2>QUEM SENTOU NA CADEIRA<br /><span className="text-primary">SEMPRE VOLTOU.</span></h2></div></div><div className="barbosa-services">{AVALIACOES.map((a, i) => <article key={a.nome} className="barbosa-card card-anim" style={{ animationDelay: `${i * 60}ms` }}><div className="flex gap-1 text-primary">{Array.from({ length: a.nota }).map((_, s) => <Star key={s} className="fill-current" />)}</div><p>"{a.texto}"</p><strong className="text-primary text-sm">{a.nome}</strong></article>)}</div></div></section>;
 
 export const BarbosaFooter = () => <>
   <footer className="barbosa-footer"><div className="barbosa-container barbosa-footer-grid"><div><a href="#inicio" className="barbosa-wordmark"><span>BARBOSA</span><small>BARBEARIA</small></a><p>Seu corte, sua identidade.</p></div><div><h3>NAVEGAÇÃO</h3>{links.map(([href, label]) => <a key={href} href={href}>{label}</a>)}</div><div><h3>ATENDIMENTO</h3><p>{CONTATO.endereco}</p><p>{CONTATO.telefone}</p>{CONTATO.horarios.map(h => <p key={h.dia}>{h.dia}: {h.hora}</p>)}</div><div><h3>SEU HORÁRIO</h3><Button asChild className="barbosa-cta"><a href="#agendamento">AGENDAR AGORA <ArrowUpRight /></a></Button><a href="/admin">Portal do administrador</a></div></div><div className="barbosa-container barbosa-copyright">© {new Date().getFullYear()} Barbearia Barbosa. Todos os direitos reservados.</div></footer>
