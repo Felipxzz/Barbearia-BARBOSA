@@ -173,8 +173,8 @@ export const TRABALHOS: Trabalho[] = [
 ];
 
 export const CONTATO = {
-  whatsappPrincipal: "15997451750",
-  telefone: "(15) 99745-1750",
+  whatsappPrincipal: "15991566902",
+  telefone: "(15) 99156-6902",
   endereco: "Sorocaba - SP",
   mapsQuery: "Barbearia Barbosa Sorocaba SP",
   instagram: "https://www.instagram.com/",
