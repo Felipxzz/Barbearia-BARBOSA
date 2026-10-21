@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792625956285,
+      "tag": "0000_barbosa_managed_catalog",
+      "breakpoints": true
+    }
+  ]
+}
