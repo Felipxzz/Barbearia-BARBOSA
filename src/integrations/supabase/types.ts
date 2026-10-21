@@ -50,6 +50,27 @@ export type Database = {
         }
         Relationships: []
       }
+      barbosa_catalog: {
+        Row: {
+          barbeiros: Json
+          id: string
+          servicos: Json
+          updated_at: string
+        }
+        Insert: {
+          barbeiros?: Json
+          id?: string
+          servicos?: Json
+          updated_at?: string
+        }
+        Update: {
+          barbeiros?: Json
+          id?: string
+          servicos?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
