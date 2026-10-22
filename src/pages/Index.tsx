@@ -12,23 +12,12 @@ import DiaSelector from "@/components/DiaSelector";
 import HorarioSelector from "@/components/HorarioSelector";
 import BotaoAgendar from "@/components/BotaoAgendar";
 
-const SERVICOS = [
-  { id: "corte", nome: "Corte", preco: "R$30", valor: 30 },
-  { id: "plano", nome: "Plano Mensal", preco: "R$70", valor: 70 },
-  { id: "pezinho", nome: "Pezinho", preco: "R$10", valor: 10 },
-  { id: "barba", nome: "Barba", preco: "R$15", valor: 15 },
-  { id: "corte-barba", nome: "Corte + Barba", preco: "R$40", valor: 40 },
-  { id: "pigmentacao", nome: "Pigmentação", preco: "R$15", valor: 15 },
-  { id: "luzes", nome: "Luzes", preco: "R$100", valor: 100 },
-  { id: "platinado", nome: "Platinado", preco: "R$120", valor: 120 },
-];
-
-const BARBEIROS = [
-  { id: "kauan", nome: "Kauan" },
-  { id: "ryan", nome: "Ryan" },
-];
+import { useCatalog } from "@/hooks/use-catalog";
 
 const Index = () => {
+  const { catalog } = useCatalog();
+  const SERVICOS = catalog.servicos.filter(s => s.ativo !== false);
+  const BARBEIROS = catalog.barbeiros.filter(b => b.ativo !== false);
   useEffect(() => {
     const fontLink = document.createElement("link");
     fontLink.rel = "stylesheet";
@@ -115,7 +104,12 @@ const Index = () => {
     const servicosInfo = servicos.map((id) => SERVICOS.find((s) => s.id === id)).filter(Boolean);
     const barbeiroInfo = BARBEIROS.find((b) => b.id === barbeiro);
     // Mensagem vai direto para o barbeiro escolhido (Kauan ou Ryan)
-    const telefoneBarbearia = barbeiro === "ryan" ? "15991566902" : "15997451750";
+    if (!barbeiroInfo || servicos.some(id => !SERVICOS.some(s => s.id === id))) {
+      toast.error("Selecione novamente os serviços e o profissional disponíveis.");
+      setLoading(false);
+      return;
+    }
+    const telefoneBarbearia = barbeiroInfo.whatsapp;
     const servicosTexto = servicosInfo.map((s) => s ? `${s.nome} - ${s.preco}` : "").filter(Boolean).join(", ");
     const datasTexto = isPlano ? datasParaAgendar.join(", ") : dia;
 
@@ -190,7 +184,7 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
         <BarbeiroSelector
           barbeiros={BARBEIROS}
           selected={barbeiro}
-          onSelect={setBarbeiro}
+          onSelect={(id) => { setBarbeiro(id); setHorario(""); }}
         />
         <DiaSelector dias={dias} selected={dia} onSelect={(d) => { setDia(d); setHorario(""); }} />
         {dia && (
@@ -211,7 +205,7 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
       <details className="barbosa-tcc"><summary>Sobre o projeto • Apresentação TCC</summary><SobreTCC /></details>
       </div>
       </section>
-      <BarbosaSections onChooseService={(id) => setServicos([id])} />
+      <BarbosaSections onChooseService={(id) => setServicos([id])} onChooseBarber={(id) => { setBarbeiro(id); setHorario(""); }} />
       <BarbosaReviews />
       <BarbosaGallery />
       <BarbosaFooter />

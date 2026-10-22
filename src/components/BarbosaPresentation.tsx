@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { ArrowUpRight, Check, Clock, MapPin, Menu, MessageCircle, Scissors, Star, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BARBEIROS, CONTATO, SERVICOS, TRABALHOS, whatsappLink } from "@/data/barbearia";
+import { CONTATO, TRABALHOS, whatsappLink } from "@/data/barbearia";
 
-const links = [ ["#planos", "Planos"], ["#servicos", "Serviços"], ["#profissionais", "Profissionais"], ["#avaliacoes", "Avaliações"], ["#trabalhos", "Trabalhos"], ["#contato", "Contato"] ];
+import { useCatalog } from "@/hooks/use-catalog";
+
+const links = [ ["#agendamento", "Agendar"], ["#planos", "Planos"], ["#servicos", "Serviços"], ["#profissionais", "Profissionais"], ["#avaliacoes", "Avaliações"], ["#trabalhos", "Trabalhos"], ["#contato", "Contato"] ];
 
 export const BarbosaHeader = () => {
   const [open, setOpen] = useState(false);
@@ -17,17 +19,21 @@ export const BarbosaHeader = () => {
   </header>;
 };
 
-export const BarbosaSections = ({ onChooseService }: { onChooseService: (id: string) => void }) => {
+export const BarbosaSections = ({ onChooseService, onChooseBarber }: { onChooseService: (id: string) => void; onChooseBarber: (id: string) => void }) => {
+  const { catalog } = useCatalog();
+  const SERVICOS = catalog.servicos.filter(s => s.ativo !== false);
+  const BARBEIROS = catalog.barbeiros.filter(b => b.ativo !== false);
+  const plan = SERVICOS.find(s => s.id === "plano");
   const book = (id: string) => { onChooseService(id); document.getElementById("agendamento")?.scrollIntoView({ behavior: "smooth" }); };
   return <>
-    <section id="planos" className="barbosa-section">
+    {plan && <section id="planos" className="barbosa-section">
       <div className="barbosa-container barbosa-plan-layout">
         <div><span className="barbosa-eyebrow">SEU ESTILO, SEMPRE EM DIA</span><h2>SEU CORTE.<br />SUA ROTINA.<br /><span className="text-primary">SEU PLANO.</span></h2><p className="barbosa-copy">O cuidado com o seu visual não precisa esperar. Mantenha o corte em dia com o Plano Mensal da Barbearia Barbosa.</p></div>
-        <article className="barbosa-plan barbosa-card card-anim"><span className="barbosa-eyebrow">BARBOSA • PLANO MENSAL</span><h3>CORTE TODA SEMANA</h3><p className="barbosa-price">R$70<span>/ mês</span></p><ul><li><Check />Corte semanal durante o mês</li><li><Check />Mesmo dia e horário</li><li><Check />Escolha o seu barbeiro</li></ul><Button className="w-full barbosa-cta" onClick={() => book("plano")}>QUERO MEU PLANO <ArrowUpRight /></Button></article>
+        <article className="barbosa-plan barbosa-card card-anim"><span className="barbosa-eyebrow">BARBOSA • PLANO MENSAL</span><h3>CORTE TODA SEMANA</h3><p className="barbosa-price">{plan.preco}<span>/ mês</span></p><ul><li><Check />Corte semanal durante o mês</li><li><Check />Mesmo dia e horário</li><li><Check />Escolha o seu barbeiro</li></ul><Button className="w-full barbosa-cta" onClick={() => book("plano")}>QUERO MEU PLANO <ArrowUpRight /></Button></article>
       </div>
-    </section>
-    <section id="servicos" className="barbosa-section"><div className="barbosa-container"><span className="barbosa-eyebrow">CUIDADO COMPLETO</span><h2>MAIS ESTILO.<br /><span className="text-primary">DO SEU JEITO.</span></h2><div className="barbosa-services">{SERVICOS.filter(s => s.id !== "plano").map((s, i) => <article key={s.id} className="barbosa-card card-anim" style={{ animationDelay: `${i * 60}ms` }}><Scissors className="text-primary" /><div className="flex items-start justify-between gap-4"><h3>{s.nome}</h3><strong className="text-primary whitespace-nowrap">{s.preco}</strong></div><p>{s.descricao}</p><Button variant="link" onClick={() => book(s.id)} className="p-0 self-start">AGENDAR <ArrowUpRight /></Button></article>)}</div></div></section>
-    <section id="profissionais" className="barbosa-section barbosa-light"><div className="barbosa-container"><span className="barbosa-eyebrow">QUEM CUIDA DO SEU ESTILO</span><h2>NOSSOS PROFISSIONAIS.</h2><div className="barbosa-team">{BARBEIROS.map((b, i) => <article key={b.id} className="barbosa-card card-anim" style={{ animationDelay: `${i * 80}ms` }}>{b.foto ? <img src={b.foto} alt={b.nome} loading="lazy" /> : <div className="barbosa-team-placeholder"><Scissors /></div>}<div><h3>{b.nome}</h3><p className="text-primary font-semibold">{b.especialidade}</p><p>{b.descricao}</p><Button asChild variant="link" className="p-0"><a href="#agendamento">AGENDAR HORÁRIO <ArrowUpRight /></a></Button></div></article>)}</div></div></section>
+    </section>}
+    <section id="servicos" className="barbosa-section"><div className="barbosa-container"><span className="barbosa-eyebrow">CUIDADO COMPLETO</span><h2>MAIS ESTILO.<br /><span className="text-primary">DO SEU JEITO.</span></h2><div className="barbosa-services">{SERVICOS.filter(s => s.id !== "plano").map((s, i) => <article key={s.id} className="barbosa-card card-anim" style={{ animationDelay: `${i * 60}ms` }}><Scissors className="text-primary" /><div className="flex items-start justify-between gap-4"><h3>{s.nome}</h3><strong className="text-primary whitespace-nowrap">{s.preco}</strong></div><p>{s.descricao}</p><span className="text-xs text-muted-foreground flex items-center gap-2"><Clock className="w-3 h-3" />{s.duracao}</span><Button variant="link" onClick={() => book(s.id)} className="p-0 self-start">AGENDAR <ArrowUpRight /></Button></article>)}</div></div></section>
+    <section id="profissionais" className="barbosa-section barbosa-light"><div className="barbosa-container"><span className="barbosa-eyebrow">QUEM CUIDA DO SEU ESTILO</span><h2>NOSSOS PROFISSIONAIS.</h2><div className="barbosa-team">{BARBEIROS.map((b, i) => <article key={b.id} className="barbosa-card card-anim" style={{ animationDelay: `${i * 80}ms` }}>{b.foto ? <img src={b.foto} alt={b.nome} loading="lazy" /> : <div className="barbosa-team-placeholder"><Scissors /></div>}<div><h3>{b.nome}</h3><p className="text-primary font-semibold">{b.especialidade}</p><p>{b.descricao}</p><Button variant="link" className="p-0" onClick={() => { onChooseBarber(b.id); document.getElementById("agendamento")?.scrollIntoView({ behavior: "smooth" }); }}>AGENDAR HORÁRIO <ArrowUpRight /></Button></div></article>)}</div></div></section>
     <section id="sobre" className="barbosa-section barbosa-about"><div className="barbosa-container barbosa-about-layout"><img src={TRABALHOS[0]?.src} alt="Corte realizado na Barbearia Barbosa" loading="lazy" /><div><span className="barbosa-eyebrow">ESTILO E CUIDADO EM CADA DETALHE</span><h2>BARBEARIA<br /><span className="text-primary">BARBOSA.</span></h2><p className="barbosa-copy">Seu corte, sua identidade. Aqui o estilo é levado a sério e o resultado é sempre de respeito.</p><p className="barbosa-copy">Do corte ao acabamento, escolha o serviço e o profissional que combinam com você.</p><Button asChild className="barbosa-cta"><a href="#agendamento">AGENDAR MEU HORÁRIO <ArrowUpRight /></a></Button></div></div></section>
     <section id="contato" className="barbosa-section">
       <div className="barbosa-container"><span className="barbosa-eyebrow">ENCONTRE A BARBOSA</span><h2>SEU PRÓXIMO CORTE<br />TEM ENDEREÇO.</h2><div className="barbosa-location"><div className="barbosa-card card-anim"><MapPin className="text-primary" /><h3>BARBEARIA BARBOSA</h3><p>{CONTATO.endereco}</p><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONTATO.mapsQuery)}`} target="_blank" rel="noopener noreferrer" className="barbosa-text-link">VER NO MAPA <ArrowUpRight /></a></div><div className="barbosa-card card-anim"><Clock className="text-primary" /><h3>HORÁRIOS</h3>{CONTATO.horarios.map(h => <p key={h.dia}>{h.dia}<strong>{h.hora}</strong></p>)}</div><div className="barbosa-card card-anim"><MessageCircle className="text-primary" /><h3>FALE COM A GENTE</h3><p>{CONTATO.telefone}</p><Button asChild className="barbosa-cta"><a href={whatsappLink(CONTATO.whatsappPrincipal, "Olá! Gostaria de agendar na Barbearia Barbosa.")} target="_blank" rel="noopener noreferrer">CHAMAR NO WHATSAPP <ArrowUpRight /></a></Button></div></div></div>

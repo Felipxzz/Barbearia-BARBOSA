@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
 
 interface Props {
@@ -27,12 +28,12 @@ const HorarioSelector = ({ dia, selected, onSelect, horariosOcupados }: Props) =
         {horarios.map((h, i) => {
           const ocupado = horariosOcupados.includes(h);
           return (
-            <button
+            <Button variant="ghost"
               key={h}
               onClick={() => !ocupado && onSelect(h)}
               disabled={ocupado}
               style={{ animationDelay: `${i * 40}ms` }}
-              className={`card-anim py-3 rounded-lg text-sm border border-transparent ${
+              className={`card-anim barbosa-option py-3 rounded-lg text-sm border border-transparent ${
                 ocupado
                   ? "bg-muted text-muted-foreground line-through opacity-50 cursor-not-allowed"
                   : selected === h
@@ -41,7 +42,7 @@ const HorarioSelector = ({ dia, selected, onSelect, horariosOcupados }: Props) =
               }`}
             >
               {h}
-            </button>
+            </Button>
           );
         })}
       </div>
