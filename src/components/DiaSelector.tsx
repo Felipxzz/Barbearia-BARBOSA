@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 interface Props {
   dias: Date[];
   selected: string;
@@ -24,18 +25,18 @@ const DiaSelector = ({ dias, selected, onSelect }: Props) => (
         const mes = d.getMonth() + 1;
         const label = `${DIAS_SEMANA[d.getDay()]}., ${dia}/${mes}`;
         return (
-          <button
+          <Button variant="ghost"
             key={dataStr}
             onClick={() => onSelect(dataStr)}
             style={{ animationDelay: `${i * 45}ms` }}
-            className={`card-anim flex-shrink-0 px-4 py-3 rounded-xl text-sm border border-transparent ${
+            className={`card-anim barbosa-option flex-shrink-0 px-4 py-3 rounded-xl text-sm border border-transparent ${
               selected === dataStr
                 ? "gradient-gold text-primary-foreground font-bold card-selected"
                 : "bg-card text-foreground"
             }`}
           >
             {label}
-          </button>
+          </Button>
         );
       })}
     </div>

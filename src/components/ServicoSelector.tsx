@@ -1,7 +1,9 @@
+import { Button } from "@/components/ui/button";
 interface Servico {
   id: string;
   nome: string;
   preco: string;
+  duracao?: string;
 }
 
 interface Props {
@@ -17,11 +19,11 @@ const ServicoSelector = ({ servicos, selected, onToggle }: Props) => (
       {servicos.map((s, i) => {
         const isSelected = selected.includes(s.id);
         return (
-          <button
+          <Button variant="ghost"
             key={s.id}
             onClick={() => onToggle(s.id)}
             style={{ animationDelay: `${i * 60}ms` }}
-            className={`card-anim p-4 rounded-xl text-left text-sm font-medium border flex items-center gap-3 ${
+            className={`card-anim barbosa-option p-4 rounded-xl text-left text-sm font-medium border flex items-center gap-3 ${
               isSelected
                 ? "gradient-gold text-primary-foreground border-transparent font-bold card-selected"
                 : "bg-card text-foreground border-gold-subtle"
@@ -32,8 +34,8 @@ const ServicoSelector = ({ servicos, selected, onToggle }: Props) => (
             }`}>
               {isSelected && <span className="text-primary-foreground text-xs animate-scale-in">✓</span>}
             </span>
-            {s.nome} – {s.preco}
-          </button>
+            <span className="flex-1 min-w-0">{s.nome}{s.duracao && <small className="block text-xs opacity-70 mt-1">{s.duracao}</small>}</span><strong className="shrink-0">{s.preco}</strong>
+          </Button>
         );
       })}
     </div>
