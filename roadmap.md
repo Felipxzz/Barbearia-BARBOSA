@@ -1,8 +1,8 @@
 # Sistema Barbosa
-- [ ] Refinar identidade visual e animações compartilhadas nas áreas pública e administrativa.
-- [ ] Organizar painel com agenda, busca de clientes e edição de agendamentos.
-- [ ] Permitir gestão persistente de serviços e profissionais sincronizada com a área pública.
-- [ ] Verificar acesso administrativo, salvamento do catálogo e navegação pública.
+- [x] Refinar identidade visual e animações compartilhadas nas áreas pública e administrativa.
+- [x] Organizar painel com agenda, busca de clientes e edição de agendamentos.
+- [x] Permitir gestão persistente de serviços e profissionais sincronizada com a área pública.
+- [x] Verificar acesso administrativo, salvamento do catálogo e navegação pública.
 
 # Kauan photo & data package
 - [x] Set Kauan's profile photo from the uploaded image (CDN asset + selectors).
