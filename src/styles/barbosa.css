@@ -67,9 +67,11 @@
 .barbosa-team-placeholder svg {width: 40px; height: 40px;}
 .barbosa-team p {font-size: 12px; line-height: 1.7; margin: 10px 0;}
 .barbosa-booking {padding: 88px 0; scroll-margin-top: 78px;}
-.barbosa-booking-layout {display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start;}
+.barbosa-booking-layout {display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 72px; align-items: start;}
 .barbosa-booking-form {display: grid; gap: 28px; min-width: 0;}
-.barbosa-booking-form h2 {font-family: 'Montserrat', sans-serif; font-size: 15px; margin: 0 0 14px; font-weight: 700; line-height: 1.4;}
+.barbosa-booking-form > * {min-width:0;max-width:100%;}
+.barbosa-booking-form .barbosa-option {width:100%;min-width:0;}
+.barbosa-site .barbosa-booking-form h2 {font-family: 'Montserrat', sans-serif; font-size: 15px; margin: 0 0 14px; font-weight: 700; line-height: 1.4;}
 .barbosa-booking-form button {border-radius: 5px;}
 .barbosa-booking-summary {position: sticky; top: 115px;}
 .barbosa-booking-form .gradient-gold {background: hsl(var(--primary));}

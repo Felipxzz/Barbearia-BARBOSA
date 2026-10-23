@@ -21,6 +21,7 @@ const ServicoSelector = ({ servicos, selected, onToggle }: Props) => (
         return (
           <Button variant="ghost"
             key={s.id}
+            aria-pressed={isSelected}
             onClick={() => onToggle(s.id)}
             style={{ animationDelay: `${i * 60}ms` }}
             className={`card-anim barbosa-option p-4 rounded-xl text-left text-sm font-medium border flex items-center gap-3 ${
