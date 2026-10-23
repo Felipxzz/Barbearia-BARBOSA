@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Scissors } from "lucide-react";
+import BarberPhoto from "@/components/BarberPhoto";
 import ryanImg from "@/assets/ryan.jpeg";
 import kauanImg from "@/assets/kauan.jpeg.asset.json";
 
@@ -35,13 +35,7 @@ const BarbeiroSelector = ({ barbeiros, selected, onSelect }: Props) => (
               : "bg-card text-foreground border-gold-subtle"
           }`}
         >
-          {(b.foto ?? FOTOS[b.id]) ? (
-            <img src={(b.foto ?? FOTOS[b.id])} alt={b.nome} className="w-12 h-12 rounded-full object-cover transition-transform duration-300 group-hover:scale-110" />
-          ) : (
-            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12">
-              <Scissors className="w-5 h-5" />
-            </div>
-          )}
+          <BarberPhoto src={b.foto ?? FOTOS[b.id]} name={b.nome} className="w-12 h-12 shrink-0 rounded-full object-cover transition-transform duration-300 group-hover:scale-110" />
           <span>{b.nome}</span>
         </Button>
       ))}

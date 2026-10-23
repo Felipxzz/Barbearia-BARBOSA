@@ -4,3 +4,4 @@
 - Share the persisted services/professionals catalog through useCatalog; keep static data as initial fallback to preserve existing content before first administrative save.
 - Validate all administrator writes server-side in admin-agendamentos using the existing secret; never persist administrator credentials in browser storage.
 - Derive customer lists from appointments without creating client accounts or public profile tables.
+- Render professional photos through BarberPhoto so unavailable images show a neutral icon without removing the saved photo.
