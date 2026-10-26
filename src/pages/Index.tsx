@@ -119,8 +119,6 @@ Data(s): ${datasTexto}
 Horário: ${horario}
 ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}OBS: ${obs}`;
 
-    // Abre a janela no clique (evita bloqueio) e define o link depois de ter o código
-    const janelaWhats = window.open("", "_blank");
 
     const inserts = datasParaAgendar.map((diaAgendar) => ({
       nome,
@@ -140,15 +138,14 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
       } else {
         toast.error("Erro ao agendar. Tente novamente.");
       }
-      janelaWhats?.close();
       setLoading(false);
       return;
     }
 
     setHorariosOcupados((prev) => [...prev, horario]);
     const urlWhats = `https://wa.me/${telefoneBarbearia}?text=${encodeURIComponent(`${mensagem}\nCódigo do agendamento: ${codigo}`)}`;
-    if (janelaWhats && !janelaWhats.closed) janelaWhats.location.href = urlWhats;
-    else window.location.href = urlWhats;
+    // Abre o WhatsApp na mesma aba (funciona no Safari/iPhone sem bloqueio)
+    window.location.href = urlWhats;
 
     toast.success(`Agendamento realizado! Seu código: ${codigo}`, { duration: 20000, description: "Guarde este código para consultar ou cancelar em 'Meus agendamentos'." });
     setLoading(false);
