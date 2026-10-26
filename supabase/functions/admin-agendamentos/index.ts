@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
     }
     attempts.delete(ip);
     if (body.action === "list" || body.action === "login-check") {
-      const { data, error } = await db.from("agendamentos").select("*").order("dia").order("horario");
+      const { data, error } = await db.from("agendamentos").select("*").neq("status", "cancelado").order("dia").order("horario");
       return error ? reply({ error: "Erro ao carregar agendamentos" }, 500) : reply({ data });
     }
     if (body.action === "catalog-save") {

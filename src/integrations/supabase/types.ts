@@ -17,6 +17,8 @@ export type Database = {
       agendamentos: {
         Row: {
           barbeiro: string
+          cancelado_em: string | null
+          codigo: string | null
           created_at: string
           dia: string
           horario: string
@@ -24,10 +26,13 @@ export type Database = {
           nome: string
           obs: string | null
           servico: string
+          status: string
           telefone: string
         }
         Insert: {
           barbeiro: string
+          cancelado_em?: string | null
+          codigo?: string | null
           created_at?: string
           dia: string
           horario: string
@@ -35,10 +40,13 @@ export type Database = {
           nome: string
           obs?: string | null
           servico: string
+          status?: string
           telefone: string
         }
         Update: {
           barbeiro?: string
+          cancelado_em?: string | null
+          codigo?: string | null
           created_at?: string
           dia?: string
           horario?: string
@@ -46,6 +54,7 @@ export type Database = {
           nome?: string
           obs?: string | null
           servico?: string
+          status?: string
           telefone?: string
         }
         Relationships: []
@@ -76,7 +85,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      cancelar_agendamento: {
+        Args: { _codigo: string; _id: string; _telefone: string }
+        Returns: boolean
+      }
+      consultar_agendamentos: {
+        Args: { _codigo: string; _telefone: string }
+        Returns: {
+          barbeiro: string
+          dia: string
+          horario: string
+          id: string
+          servico: string
+          status: string
+        }[]
+      }
+      criar_agendamentos: { Args: { _itens: Json }; Returns: string }
+      horarios_ocupados: {
+        Args: { _barbeiro: string; _dia: string }
+        Returns: string[]
+      }
     }
     Enums: {
       [_ in never]: never

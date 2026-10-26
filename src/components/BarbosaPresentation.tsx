@@ -6,7 +6,7 @@ import { CONTATO, TRABALHOS, whatsappLink } from "@/data/barbearia";
 import { useCatalog } from "@/hooks/use-catalog";
 import BarberPhoto from "@/components/BarberPhoto";
 
-const links = [ ["#agendamento", "Agendar"], ["#planos", "Planos"], ["#servicos", "Serviços"], ["#profissionais", "Profissionais"], ["#avaliacoes", "Avaliações"], ["#trabalhos", "Trabalhos"], ["#contato", "Contato"] ];
+const links = [ ["#agendamento", "Agendar"], ["#meus-agendamentos", "Meus horários"], ["#planos", "Planos"], ["#servicos", "Serviços"], ["#profissionais", "Profissionais"], ["#avaliacoes", "Avaliações"], ["#trabalhos", "Trabalhos"], ["#contato", "Contato"] ];
 
 export const BarbosaHeader = () => {
   const [open, setOpen] = useState(false);
