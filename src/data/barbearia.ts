@@ -175,8 +175,8 @@ export const TRABALHOS: Trabalho[] = [
 export const CONTATO = {
   whatsappPrincipal: "15991566902",
   telefone: "(15) 99156-6902",
-  endereco: "Rua Maria Eunice Bertola Gaioto, 223E - Residencial Bertola, Sorocaba - SP",
-  mapsQuery: "Rua Maria Eunice Bertola Gaioto 223 Residencial Bertola Sorocaba SP",
+  endereco: "Rua Maria Eunice Bertola Gaioto, 223 - Residencial Bertola, Tietê - SP",
+  mapsQuery: "Rua Maria Eunice Bertola Gaioto 223 Residencial Bertola Tiete SP",
   instagram: "https://www.instagram.com/",
   horarios: [
     { dia: "Terça a Sexta", hora: "14h às 19h" },
