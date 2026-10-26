@@ -1,4 +1,5 @@
-import ryanImg from "@/assets/ryan.jpeg";
+import ryanAsset from "@/assets/ryan.jpeg.asset.json";
+const ryanImg = ryanAsset.url;
 import kauanImg from "@/assets/kauan.jpeg.asset.json";
 
 import corte1 from "@/assets/corte1.jpeg";
