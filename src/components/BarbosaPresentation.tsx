@@ -45,7 +45,7 @@ export const BarbosaSections = ({ onChooseService, onChooseBarber }: { onChooseS
 export const BarbosaGallery = () => <section id="trabalhos" className="barbosa-section"><div className="barbosa-container"><div className="barbosa-section-heading"><div><span className="barbosa-eyebrow">FEITO NA BARBOSA</span><h2>O RESULTADO<br /><span className="text-primary">FALA POR SI.</span></h2></div><p className="barbosa-copy">Cortes, acabamentos e transformações realizados pela nossa equipe.</p></div><div className="barbosa-gallery">{TRABALHOS.map((t, i) => <a href={t.src} target="_blank" rel="noopener noreferrer" key={t.src} aria-label={`Ver foto do trabalho ${i + 1}`}><img src={t.src} alt={`Trabalho da Barbearia Barbosa ${i + 1}`} loading="lazy" /></a>)}</div></div></section>;
 
 const AVALIACOES = [
-  { nome: "Carlos M.", nota: 5, texto: "Melhor barbearia de Sorocaba. O Kauan capricha no degradê e o atendimento é nota 10." },
+  { nome: "Carlos M.", nota: 5, texto: "Melhor barbearia de Tietê. O Kauan capricha no degradê e o atendimento é nota 10." },
   { nome: "Pedro H.", nota: 5, texto: "Faço o plano mensal e vale cada centavo. Meu horário sempre reservado, sem espera." },
   { nome: "Lucas A.", nota: 5, texto: "O Ryan fez as luzes no meu cabelo e o resultado ficou incrível. Recomendo demais." },
   { nome: "João V.", nota: 5, texto: "Ambiente top, barba alinhada e pontualidade. Já é meu ponto fixo todo sábado." },
