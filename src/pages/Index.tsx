@@ -11,6 +11,7 @@ import BarbeiroSelector from "@/components/BarbeiroSelector";
 import DiaSelector from "@/components/DiaSelector";
 import HorarioSelector from "@/components/HorarioSelector";
 import BotaoAgendar from "@/components/BotaoAgendar";
+import MeusAgendamentos from "@/components/MeusAgendamentos";
 
 import { useCatalog } from "@/hooks/use-catalog";
 
@@ -62,12 +63,8 @@ const Index = () => {
       return;
     }
     const fetchOcupados = async () => {
-      const { data } = await supabase
-        .from("agendamentos")
-        .select("horario")
-        .eq("barbeiro", barbeiro)
-        .eq("dia", dia);
-      setHorariosOcupados(data?.map((a) => a.horario) ?? []);
+      const { data } = await supabase.rpc("horarios_ocupados", { _barbeiro: barbeiro, _dia: dia });
+      setHorariosOcupados((data as string[] | null) ?? []);
     };
     fetchOcupados();
   }, [barbeiro, dia]);
@@ -122,9 +119,8 @@ Data(s): ${datasTexto}
 Horário: ${horario}
 ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}OBS: ${obs}`;
 
-    // Link direto (wa.me) já preenchido, aberto no clique para o navegador não bloquear
-    const urlWhats = `https://wa.me/${telefoneBarbearia}?text=${encodeURIComponent(mensagem)}`;
-    const janelaWhats = window.open(urlWhats, "_blank");
+    // Abre a janela no clique (evita bloqueio) e define o link depois de ter o código
+    const janelaWhats = window.open("", "_blank");
 
     const inserts = datasParaAgendar.map((diaAgendar) => ({
       nome,
@@ -136,7 +132,7 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
       obs: isPlano ? `${obs ? obs + " | " : ""}Plano Mensal` : obs,
     }));
 
-    const { error } = await supabase.from("agendamentos").insert(inserts);
+    const { data: codigo, error } = await supabase.rpc("criar_agendamentos", { _itens: inserts });
 
     if (error) {
       if (error.code === "23505") {
@@ -149,13 +145,12 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
       return;
     }
 
-    // Atualizar horários ocupados
     setHorariosOcupados((prev) => [...prev, horario]);
+    const urlWhats = `https://wa.me/${telefoneBarbearia}?text=${encodeURIComponent(`${mensagem}\nCódigo do agendamento: ${codigo}`)}`;
+    if (janelaWhats && !janelaWhats.closed) janelaWhats.location.href = urlWhats;
+    else window.location.href = urlWhats;
 
-    // Se o navegador bloqueou a janela do WhatsApp, força o link direto (wa.me)
-    if (!janelaWhats || janelaWhats.closed) window.location.href = urlWhats;
-
-    toast.success("Agendamento realizado com sucesso!");
+    toast.success(`Agendamento realizado! Seu código: ${codigo}`, { duration: 20000, description: "Guarde este código para consultar ou cancelar em 'Meus agendamentos'." });
     setLoading(false);
   };
 
@@ -206,6 +201,7 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
       </div>
       </section>
       <BarbosaSections onChooseService={(id) => setServicos([id])} onChooseBarber={(id) => { setBarbeiro(id); setHorario(""); }} />
+      <MeusAgendamentos barbeiros={catalog.barbeiros} />
       <BarbosaReviews />
       <BarbosaGallery />
       <BarbosaFooter />
