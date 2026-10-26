@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import BarberPhoto from "@/components/BarberPhoto";
-import ryanImg from "@/assets/ryan.jpeg";
+import ryanAsset from "@/assets/ryan.jpeg.asset.json";
+const ryanImg = ryanAsset.url;
 import kauanImg from "@/assets/kauan.jpeg.asset.json";
 
 interface Barbeiro {
