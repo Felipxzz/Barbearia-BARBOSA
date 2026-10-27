@@ -6,9 +6,10 @@ export interface CatalogService extends Servico { ativo?: boolean }
 export interface CatalogBarber extends Barbeiro { ativo?: boolean }
 export interface Catalog { servicos: CatalogService[]; barbeiros: CatalogBarber[] }
 export const initialCatalog: Catalog = { servicos: SERVICOS, barbeiros: BARBEIROS };
-export const useCatalog = () => {
+export const useCatalog = (enabled = true) => {
   const query = useQuery({
     queryKey: ["barbosa-catalog"],
+    enabled,
     queryFn: async (): Promise<Catalog> => {
       const { data, error } = await supabase.functions.invoke("admin-agendamentos", { body: { action: "catalog-public" } });
       if (error || data?.error) throw new Error("Não foi possível carregar os serviços e profissionais.");
