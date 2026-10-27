@@ -94,7 +94,8 @@
 .barbosa-plan-layout > *, .barbosa-team > *, .barbosa-team article > *, .barbosa-location > *, .barbosa-about-layout > *, .barbosa-footer-grid > * {min-width:0;overflow-wrap:anywhere;}
 @media (max-width: 768px) {.barbosa-plan-layout,.barbosa-team,.barbosa-location,.barbosa-about-layout,.barbosa-booking-layout{grid-template-columns:minmax(0,1fr);gap:32px}.barbosa-booking-summary{position:static}}
 @media (max-height: 600px) and (min-width: 601px) {.barbosa-hero{padding-block:24px;min-height:0}.barbosa-hero h1{font-size:42px;margin-block:16px}.barbosa-hero p{margin-bottom:18px}}
-@media (max-width: 360px) {.barbosa-hero h1{font-size:40px}.barbosa-footer-grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width: 360px) {.barbosa-hero h1{font-size:40px}.barbosa-header .barbosa-header-cta{font-size:10px;padding-inline:10px}.barbosa-footer-grid{grid-template-columns:minmax(0,1fr)}}
+.barbosa-team article .inline-flex {max-width:100%;height:auto;min-height:40px;white-space:normal;text-align:left;}
 @media(prefers-reduced-motion:reduce){.barbosa-gallery img{transition:none}.barbosa-gallery a:hover img{transform:none}}.barbosa-admin h1 {font-size: 34px; line-height: 1.1; margin: 0; max-width: none;}
 /* Cards personalizados animados (estilo Hermanos) */
 .barbosa-card {position: relative; overflow: hidden; transition: transform .35s cubic-bezier(.22,1,.36,1), border-color .35s, box-shadow .35s;}
