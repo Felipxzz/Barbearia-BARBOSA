@@ -7,3 +7,4 @@
 - Render professional photos through BarberPhoto so unavailable images show a neutral icon without removing the saved photo.
 - Keep cover video decorative, muted and inline with the original photo fallback; reduced-motion shows the still photo to preserve accessibility.
 - Validate administrator access separately from agenda reads so the protected panel can open before appointments finish loading; fetch the catalog only after validation on the admin page and keep credentials in memory only.
+- Keep tested booking date and customer validation helpers in src/lib/booking.ts; enforce the same booking rules in the database RPC because client checks alone cannot protect reservations.
