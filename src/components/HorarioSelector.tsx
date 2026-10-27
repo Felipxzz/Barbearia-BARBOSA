@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useMemo } from "react";
+import { availableHours } from "@/lib/booking";
 
 interface Props {
   dia: string;
@@ -10,15 +11,7 @@ interface Props {
 
 const HorarioSelector = ({ dia, selected, onSelect, horariosOcupados }: Props) => {
   const horarios = useMemo(() => {
-    const dataObj = new Date(dia + "T12:00:00");
-    const diaSemana = dataObj.getDay();
-    const inicio = diaSemana === 6 ? 8 : 14;
-    const fim = 19;
-    const result: string[] = [];
-    for (let i = inicio; i <= fim; i++) {
-      result.push((i < 10 ? "0" : "") + i + ":00");
-    }
-    return result;
+    return availableHours(dia);
   }, [dia]);
 
   return (

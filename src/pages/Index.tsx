@@ -14,6 +14,7 @@ import BotaoAgendar from "@/components/BotaoAgendar";
 import MeusAgendamentos from "@/components/MeusAgendamentos";
 
 import { useCatalog } from "@/hooks/use-catalog";
+import { monthlyDates, validCustomer } from "@/lib/booking";
 
 const Index = () => {
   const { catalog } = useCatalog();
@@ -62,11 +63,16 @@ const Index = () => {
       setHorariosOcupados([]);
       return;
     }
+    let active = true;
+    setHorariosOcupados([]);
     const fetchOcupados = async () => {
-      const { data } = await supabase.rpc("horarios_ocupados", { _barbeiro: barbeiro, _dia: dia });
+      const { data, error } = await supabase.rpc("horarios_ocupados", { _barbeiro: barbeiro, _dia: dia });
+      if (!active) return;
+      if (error) { toast.error("Não foi possível verificar os horários. Tente selecionar o dia novamente."); return; }
       setHorariosOcupados((data as string[] | null) ?? []);
     };
     fetchOcupados();
+    return () => { active = false; };
   }, [barbeiro, dia]);
 
   const handleAgendar = async () => {
@@ -75,28 +81,17 @@ const Index = () => {
       return;
     }
 
+    if (!validCustomer(nome, telefone)) {
+      toast.error("Informe um nome com pelo menos duas letras e telefone com DDD (10 a 13 dígitos).");
+      return;
+    }
     setLoading(true);
 
     const servicoTexto = servicos.map((id) => SERVICOS.find((s) => s.id === id)?.nome).join(", ");
     const isPlano = servicos.includes("plano");
 
     // Se plano mensal, agendar para todas as semanas do mês (mesmo dia da semana)
-    let datasParaAgendar = [dia];
-    if (isPlano) {
-      const dataBase = new Date(dia + "T12:00:00");
-      const diaSemana = dataBase.getDay();
-      const mes = dataBase.getMonth();
-      const ano = dataBase.getFullYear();
-      const todasDatas: string[] = [];
-      const d = new Date(ano, mes, 1);
-      while (d.getMonth() === mes) {
-        if (d.getDay() === diaSemana) {
-          todasDatas.push(d.toISOString().split("T")[0]);
-        }
-        d.setDate(d.getDate() + 1);
-      }
-      datasParaAgendar = todasDatas;
-    }
+    const datasParaAgendar = isPlano ? monthlyDates(dia) : [dia];
 
     const servicosInfo = servicos.map((id) => SERVICOS.find((s) => s.id === id)).filter(Boolean);
     const barbeiroInfo = BARBEIROS.find((b) => b.id === barbeiro);
@@ -143,7 +138,7 @@ ${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}
     }
 
     setHorariosOcupados((prev) => [...prev, horario]);
-    const urlWhats = `https://wa.me/${telefoneBarbearia}?text=${encodeURIComponent(`${mensagem}\nCódigo do agendamento: ${codigo}`)}`;
+    const urlWhats = `https://wa.me/${telefoneBarbearia.length <= 11 ? `55${telefoneBarbearia}` : telefoneBarbearia}?text=${encodeURIComponent(`${mensagem}\nCódigo do agendamento: ${codigo}`)}`;
     // Abre o WhatsApp na mesma aba (funciona no Safari/iPhone sem bloqueio)
     window.location.href = urlWhats;
 
