@@ -1,5 +1,6 @@
 # Sistema Barbosa
-- [x] Corrigir cortes da capa e verificar renderização em celulares, tablets e computadores de diferentes tamanhos.
+- [ ] Desfazer os últimos ajustes da capa conforme solicitado.
+- [ ] Reduzir a espera no acesso administrativo sem remover proteção ou expor dados.
 - [x] Refinar identidade visual e animações compartilhadas nas áreas pública e administrativa.
 - [x] Organizar painel com agenda, busca de clientes e edição de agendamentos.
 - [x] Permitir gestão persistente de serviços e profissionais sincronizada com a área pública.
