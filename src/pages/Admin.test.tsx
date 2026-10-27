@@ -36,7 +36,9 @@ describe("Protected admin loading", () => {
     await screen.findByRole("navigation", { name: "Menu administrativo" });
     expect(mocks.invoke.mock.calls[1][1].body.action).toBe("list");
     expect(mocks.catalog).toHaveBeenCalledWith(true);
-    fireEvent.click(screen.getByRole("button", { name: "Sair do painel", exact: true }));
+    const logout = screen.getAllByRole("button", { name: "Sair do painel", exact: true })[0];
+    if (!logout) throw new Error("Logout missing");
+    fireEvent.click(logout);
     finish?.({ data: { data: [{ id: "private-row" }] }, error: null });
     await waitFor(() => expect(screen.getByRole("button", { name: "Entrar no painel" })).toBeInTheDocument());
     expect(screen.queryByRole("navigation", { name: "Menu administrativo" })).toBeNull();
