@@ -22,10 +22,10 @@
 .barbosa-header-cta {border-radius: 30px; font-size: 10px; font-weight: 800; box-shadow: var(--cta-shadow); padding-inline: 20px;}
 .barbosa-mobile-menu {padding: 15px 24px; border-top: 1px solid hsl(var(--border));}
 .barbosa-mobile-menu a {display: block; padding: 12px 0; font-size: 13px;}
-.barbosa-hero {position: relative; min-height: min(640px, calc(100svh - 140px)); height: auto; padding-block: 48px; display: flex; align-items: center; overflow: hidden; isolation: isolate;}
+.barbosa-hero {position: relative; min-height: 640px; height: min(720px, 82svh); display: flex; align-items: center; overflow: hidden;}
 .barbosa-hero-image,.barbosa-hero-video,.barbosa-hero-shade {position: absolute; inset: 0; width: 100%; height: 100%;}
-.barbosa-hero-image,.barbosa-hero-video {object-fit: contain; object-position: right center; transform-origin: right center; animation: barbosa-cover-motion 40s ease-in-out infinite alternate;}
-@keyframes barbosa-cover-motion {from {transform: scale(.965);} to {transform: scale(1);}}
+.barbosa-hero-image,.barbosa-hero-video {object-fit: cover; object-position: center 42%; transform-origin: center 42%; animation: barbosa-cover-motion 40s ease-in-out infinite alternate;}
+@keyframes barbosa-cover-motion {from {transform: scale(1);} to {transform: scale(1.035);}}
 @media (prefers-reduced-motion: reduce) {.barbosa-hero-image {animation: none; transform: none;}.barbosa-hero-video {display:none;}}
 .barbosa-hero-shade {background: var(--hero-shade);}
 .barbosa-hero-badge {display: inline-flex; align-items: center; gap: 7px; border: 1px solid hsl(var(--primary)); color: hsl(var(--primary)); border-radius: 20px; padding: 6px 11px; font-size: 10px; font-weight: 700;}
@@ -86,16 +86,7 @@
 .barbosa-copyright {border-top: 1px solid hsl(var(--border)); padding-block: 22px; font-size: 10px; color: hsl(var(--muted-foreground));}
 .barbosa-whatsapp {position: fixed; right: 24px; bottom: 24px; z-index: 40; width: 48px; height: 48px; border-radius: 50%; background: hsl(var(--whatsapp)); color: hsl(var(--primary-foreground)); box-shadow: 0 5px 20px hsl(var(--whatsapp) / .35);}
 @media(max-width: 900px) {.barbosa-plan-layout{gap:40px}.barbosa-services{grid-template-columns:repeat(2,1fr)}.barbosa-location{gap:24px}.barbosa-team article{grid-template-columns:90px 1fr}.barbosa-team img,.barbosa-team-placeholder{width:90px;height:130px}.barbosa-booking-layout{gap:40px}.barbosa-footer-grid{grid-template-columns:1fr 1fr}}
-@media(max-width: 600px) {.barbosa-container{width:calc(100% - 36px)}.barbosa-header nav{height:70px}.barbosa-wordmark span{font-size:30px}.barbosa-header-cta{font-size:9px;padding-inline:12px}.barbosa-hero{min-height:520px;padding-block:36px}.barbosa-hero-image,.barbosa-hero-video{object-position:center;transform-origin:center}.barbosa-site h1{font-size:46px}.barbosa-site h2{font-size:42px}.barbosa-hero p{font-size:12px;max-width:320px}.barbosa-section,.barbosa-booking{padding:56px 0}.barbosa-plan-layout,.barbosa-location,.barbosa-about-layout,.barbosa-team,.barbosa-booking-layout{grid-template-columns:1fr;gap:32px}.barbosa-plan{padding:26px}.barbosa-section-heading{display:block}.barbosa-gallery{grid-template-columns:repeat(2,1fr);gap:10px}.barbosa-services{grid-template-columns:1fr}.barbosa-location > div{padding-bottom:24px;border-bottom:1px solid hsl(var(--border))}.barbosa-booking-summary{position:static}.barbosa-team article{grid-template-columns:100px 1fr}.barbosa-team img,.barbosa-team-placeholder{width:100px;height:140px}.barbosa-footer-grid{gap:32px 18px}.barbosa-whatsapp{bottom:16px;right:16px}.barbosa-footer .barbosa-cta{padding-inline:12px;font-size:9px}}
-/* Keep intrinsic content from stretching tracks or clipping on compact screens. */
-.barbosa-hero .barbosa-container {min-width:0;}
-.barbosa-hero h1 {overflow-wrap:anywhere;}
-.barbosa-hero .barbosa-cta {max-width:100%;height:auto;min-height:46px;white-space:normal;padding-block:12px;}
-.barbosa-plan-layout > *, .barbosa-team > *, .barbosa-team article > *, .barbosa-location > *, .barbosa-about-layout > *, .barbosa-footer-grid > * {min-width:0;overflow-wrap:anywhere;}
-@media (max-width: 768px) {.barbosa-plan-layout,.barbosa-team,.barbosa-location,.barbosa-about-layout,.barbosa-booking-layout{grid-template-columns:minmax(0,1fr);gap:32px}.barbosa-booking-summary{position:static}}
-@media (max-height: 600px) and (min-width: 601px) {.barbosa-hero{padding-block:24px;min-height:0}.barbosa-hero h1{font-size:42px;margin-block:16px}.barbosa-hero p{margin-bottom:18px}}
-@media (max-width: 360px) {.barbosa-hero h1{font-size:40px}.barbosa-header .barbosa-header-cta{font-size:10px;padding-inline:10px}.barbosa-footer-grid{grid-template-columns:minmax(0,1fr)}}
-.barbosa-team article .inline-flex {max-width:100%;height:auto;min-height:40px;white-space:normal;text-align:left;}
+@media(max-width: 600px) {.barbosa-container{width:calc(100% - 36px)}.barbosa-header nav{height:70px}.barbosa-wordmark span{font-size:30px}.barbosa-header-cta{font-size:9px;padding-inline:12px}.barbosa-hero{height:600px;min-height:0;max-height:calc(100svh - 110px)}.barbosa-site h1{font-size:46px}.barbosa-site h2{font-size:42px}.barbosa-hero p{font-size:12px;max-width:320px}.barbosa-section,.barbosa-booking{padding:56px 0}.barbosa-plan-layout,.barbosa-location,.barbosa-about-layout,.barbosa-team,.barbosa-booking-layout{grid-template-columns:1fr;gap:32px}.barbosa-plan{padding:26px}.barbosa-section-heading{display:block}.barbosa-gallery{grid-template-columns:repeat(2,1fr);gap:10px}.barbosa-services{grid-template-columns:1fr}.barbosa-location > div{padding-bottom:24px;border-bottom:1px solid hsl(var(--border))}.barbosa-booking-summary{position:static}.barbosa-team article{grid-template-columns:100px 1fr}.barbosa-team img,.barbosa-team-placeholder{width:100px;height:140px}.barbosa-footer-grid{gap:32px 18px}.barbosa-whatsapp{bottom:16px;right:16px}.barbosa-footer .barbosa-cta{padding-inline:12px;font-size:9px}}
 @media(prefers-reduced-motion:reduce){.barbosa-gallery img{transition:none}.barbosa-gallery a:hover img{transform:none}}.barbosa-admin h1 {font-size: 34px; line-height: 1.1; margin: 0; max-width: none;}
 /* Cards personalizados animados (estilo Hermanos) */
 .barbosa-card {position: relative; overflow: hidden; transition: transform .35s cubic-bezier(.22,1,.36,1), border-color .35s, box-shadow .35s;}
