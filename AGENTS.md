@@ -5,3 +5,4 @@
 - Validate all administrator writes server-side in admin-agendamentos using the existing secret; never persist administrator credentials in browser storage.
 - Derive customer lists from appointments without creating client accounts or public profile tables.
 - Render professional photos through BarberPhoto so unavailable images show a neutral icon without removing the saved photo.
+- Keep cover video decorative, muted and inline with the original photo fallback; reduced-motion shows the still photo to preserve accessibility.

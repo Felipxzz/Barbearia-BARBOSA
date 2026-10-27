@@ -23,10 +23,10 @@
 .barbosa-mobile-menu {padding: 15px 24px; border-top: 1px solid hsl(var(--border));}
 .barbosa-mobile-menu a {display: block; padding: 12px 0; font-size: 13px;}
 .barbosa-hero {position: relative; min-height: 640px; height: min(720px, 82svh); display: flex; align-items: center; overflow: hidden;}
-.barbosa-hero-image,.barbosa-hero-shade {position: absolute; inset: 0; width: 100%; height: 100%;}
-.barbosa-hero-image {object-fit: cover; object-position: center 42%; transform-origin: center 42%; animation: barbosa-cover-motion 20s ease-in-out infinite alternate;}
-@keyframes barbosa-cover-motion {from {transform: scale(1);} to {transform: scale(1.08);}}
-@media (prefers-reduced-motion: reduce) {.barbosa-hero-image {animation: none; transform: none;}}
+.barbosa-hero-image,.barbosa-hero-video,.barbosa-hero-shade {position: absolute; inset: 0; width: 100%; height: 100%;}
+.barbosa-hero-image,.barbosa-hero-video {object-fit: cover; object-position: center 42%; transform-origin: center 42%; animation: barbosa-cover-motion 40s ease-in-out infinite alternate;}
+@keyframes barbosa-cover-motion {from {transform: scale(1);} to {transform: scale(1.035);}}
+@media (prefers-reduced-motion: reduce) {.barbosa-hero-image {animation: none; transform: none;}.barbosa-hero-video {display:none;}}
 .barbosa-hero-shade {background: var(--hero-shade);}
 .barbosa-hero-badge {display: inline-flex; align-items: center; gap: 7px; border: 1px solid hsl(var(--primary)); color: hsl(var(--primary)); border-radius: 20px; padding: 6px 11px; font-size: 10px; font-weight: 700;}
 .barbosa-hero-badge svg {width: 12px; height: 12px; fill: currentColor;}
