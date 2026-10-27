@@ -1,10 +1,16 @@
 import heroBg from "@/assets/hero-bg.jpeg";
+import heroVideo from "@/assets/videos/barbosa-cover-muted.mp4.asset.json";
+import heroWebm from "@/assets/videos/barbosa-cover-muted.webm.asset.json";
 import { ArrowUpRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const HeroSection = () => (
   <section id="inicio" className="barbosa-hero">
     <img src={heroBg} alt="Barbearia Barbosa" className="barbosa-hero-image" />
+    <video className="barbosa-hero-video" autoPlay loop muted playsInline preload="metadata" poster={heroBg} aria-hidden="true">
+      <source src={heroWebm.url} type="video/webm" />
+      <source src={heroVideo.url} type="video/mp4" />
+    </video>
     <div className="barbosa-hero-shade" />
     <div className="barbosa-container relative z-10">
       <span className="barbosa-hero-badge"><Star /> ESTILO E TRADIÇÃO</span>
