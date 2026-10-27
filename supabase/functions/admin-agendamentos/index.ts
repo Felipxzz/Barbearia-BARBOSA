@@ -45,8 +45,9 @@ Deno.serve(async (req) => {
       return reply({ error: "Senha incorreta" }, 401);
     }
     attempts.delete(ip);
-    if (body.action === "list" || body.action === "login-check") {
-      const { data, error } = await db.from("agendamentos").select("*").neq("status", "cancelado").order("dia").order("horario");
+    if (body.action === "login-check") return reply({ success: true });
+    if (body.action === "list") {
+      const { data, error } = await db.from("agendamentos").select("id,nome,telefone,servico,barbeiro,dia,horario,obs,created_at").neq("status", "cancelado").order("dia").order("horario");
       return error ? reply({ error: "Erro ao carregar agendamentos" }, 500) : reply({ data });
     }
     if (body.action === "catalog-save") {

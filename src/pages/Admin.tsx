@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -18,6 +18,8 @@ export default function Admin() {
   const [password, setPassword] = useState("");
   const [credential, setCredential] = useState("");
   const [busy, setBusy] = useState(false);
+  const [agendaLoading, setAgendaLoading] = useState(false);
+  const activeCredential = useRef("");
   const [errorText, setErrorText] = useState("");
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [view, setView] = useState<View>("agenda");
@@ -29,7 +31,7 @@ export default function Admin() {
   const [cancel, setCancel] = useState<Appointment | null>(null);
   const [customer, setCustomer] = useState<string | null>(null);
   const [now, setNow] = useState(new Date());
-  const { catalog } = useCatalog();
+  const { catalog } = useCatalog(Boolean(credential));
   const queryClient = useQueryClient();
   useEffect(() => {
     const font = document.createElement("link"); font.rel = "stylesheet";
@@ -40,7 +42,17 @@ export default function Admin() {
     return () => { font.remove(); meta.remove(); clearInterval(timer); };
   }, []);
   const invoke = useCallback(async (body: Record<string, unknown>) => {
-    const { data, error } = await supabase.functions.invoke("admin-agendamentos", { body });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15000);
+    let result;
+    try {
+      result = await supabase.functions.invoke("admin-agendamentos", { body, signal: controller.signal });
+      if (controller.signal.aborted) throw new Error("A conexão demorou demais. Tente novamente.");
+    } catch (error) {
+      if (controller.signal.aborted) throw new Error("A conexão demorou demais. Tente novamente.");
+      throw error;
+    } finally { clearTimeout(timer); }
+    const { data, error } = result;
     let message = data?.error;
     if (error && !message) {
       try { message = (await (error as { context?: Response }).context?.json())?.error; } catch { /* use connection message */ }
@@ -49,9 +61,19 @@ export default function Admin() {
     return data;
   }, []);
   const load = async (pass = credential) => {
+    if (!pass || activeCredential.current !== pass) return;
+    setAgendaLoading(true); setErrorText("");
+    try { const data = await invoke({ password: pass, action: "list" }); if (activeCredential.current === pass) setAppointments(data.data ?? []); }
+    catch (error) { if (activeCredential.current !== pass) return; const message = error instanceof Error ? error.message : "Erro ao carregar agenda"; setErrorText(message); toast.error(message); }
+    finally { if (activeCredential.current === pass) setAgendaLoading(false); }
+  };
+  const login = async (pass: string) => {
     setBusy(true); setErrorText("");
-    try { const data = await invoke({ password: pass, action: "list" }); setAppointments(data.data ?? []); setCredential(pass); setPassword(""); }
-    catch (error) { const message = error instanceof Error ? error.message : "Erro ao carregar agenda"; setErrorText(message); toast.error(message); }
+    try {
+      await invoke({ password: pass, action: "login-check" });
+      activeCredential.current = pass; setCredential(pass); setPassword("");
+      void load(pass);
+    } catch (error) { const message = error instanceof Error ? error.message : "Não foi possível acessar o painel."; setErrorText(message); toast.error(message); }
     finally { setBusy(false); }
   };
   const saveCatalog = async (next: Catalog) => {
@@ -84,11 +106,11 @@ export default function Admin() {
   const selectedCustomer = clients.find(c => normalizePhone(c.telefone) === customer);
   const barberName = (id: string) => catalog.barbeiros.find(b => b.id === id)?.nome ?? id;
   const remind = (a: Appointment) => reminderLink({ ...a, barbeiro: barberName(a.barbeiro) });
-  const logout = () => { setCredential(""); setPassword(""); setAppointments([]); setSearch(""); setEditing(null); setCustomer(null); setCancel(null); };
+  const logout = () => { activeCredential.current = ""; setAgendaLoading(false); setCredential(""); setPassword(""); setAppointments([]); setSearch(""); setEditing(null); setCustomer(null); setCancel(null); };
 
   if (!credential) return <main className="barbosa-site barbosa-admin admin-login">
     <a className="admin-login-brand barbosa-wordmark" href="/"><span>BARBOSA</span><small>BARBEARIA</small></a>
-    <form className="admin-login-form card-anim" onSubmit={e => { e.preventDefault(); if (password.trim() && !busy) void load(password.trim()); }}>
+    <form className="admin-login-form card-anim" onSubmit={e => { e.preventDefault(); if (password.trim() && !busy) void login(password.trim()); }}>
       <div className="admin-item-icon mb-6"><LockKeyhole /></div><span className="barbosa-eyebrow">ÁREA ADMINISTRATIVA</span><h1 className="mt-3 mb-3">Bem-vindo à Barbosa.</h1><p className="text-muted-foreground text-sm mb-8">Acesso restrito à administração.</p>
       <div className="admin-form"><label>Senha de administrador<input type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="Digite sua senha" /></label></div>
       {errorText && <p role="alert" className="text-destructive text-sm mt-3">{errorText}</p>}
@@ -98,8 +120,9 @@ export default function Admin() {
 
   return <div className="barbosa-site barbosa-admin admin-shell">
     <aside className="admin-sidebar"><a href="/" className="barbosa-wordmark"><span>BARBOSA</span><small>ADMINISTRAÇÃO</small></a><div className="admin-nav-label">GERENCIAMENTO</div><nav aria-label="Menu administrativo">{views.map(v => <Button key={v.id} variant="ghost" className={`admin-nav-button ${view === v.id ? "admin-nav-active" : ""}`} onClick={() => { setView(v.id); setSearch(""); }}><v.icon />{v.label}</Button>)}</nav><div className="admin-sidebar-bottom"><Button asChild variant="outline"><a href="/" target="_blank" rel="noopener noreferrer">Área dos clientes<ArrowUpRight /></a></Button><Button variant="ghost" onClick={logout}><LogOut />Sair do painel</Button></div></aside>
-    <div className="admin-main"><header className="admin-topbar"><div><span className="barbosa-eyebrow">BARBEARIA BARBOSA</span><h1>{views.find(v => v.id === view)?.label}</h1></div><div className="flex items-center gap-3"><span className="admin-date text-xs text-muted-foreground">{now.toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}</span><Button variant="outline" size="icon" title="Atualizar agenda" aria-label="Atualizar agenda" disabled={busy} onClick={() => void load()}><RefreshCw className={busy ? "animate-spin" : ""} /></Button><Button variant="ghost" size="icon" className="lg:hidden" title="Sair do painel" aria-label="Sair do painel" onClick={logout}><LogOut /></Button></div></header>
+    <div className="admin-main"><header className="admin-topbar"><div><span className="barbosa-eyebrow">BARBEARIA BARBOSA</span><h1>{views.find(v => v.id === view)?.label}</h1></div><div className="flex items-center gap-3"><span className="admin-date text-xs text-muted-foreground">{now.toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}</span><Button variant="outline" size="icon" title="Atualizar agenda" aria-label="Atualizar agenda" disabled={busy || agendaLoading} onClick={() => void load()}><RefreshCw className={busy || agendaLoading ? "animate-spin" : ""} /></Button><Button variant="ghost" size="icon" className="lg:hidden" title="Sair do painel" aria-label="Sair do painel" onClick={logout}><LogOut /></Button></div></header>
     <main className="admin-content">
+      {agendaLoading && <p role="status" className="text-muted-foreground text-sm mb-4 flex items-center gap-2"><RefreshCw className="w-4 h-4 animate-spin" />Carregando agenda…</p>}
       {errorText && <p role="alert" className="text-destructive text-sm mb-4">{errorText}</p>}
       <div className="admin-stats">{[{ title: "Agendamentos hoje", value: appointments.filter(a => a.dia === today).length, icon: CalendarDays }, { title: "Próximos horários", value: appointments.filter(a => a.dia >= today).length, icon: Clock }, { title: "Clientes atendidos", value: clients.length, icon: Users }, { title: "Profissionais ativos", value: catalog.barbeiros.filter(b => b.ativo !== false).length, icon: Scissors }].map(stat => <article className="admin-stat barbosa-card card-anim" key={stat.title}><div className="flex justify-between gap-3"><span>{stat.title}</span><stat.icon className="text-primary w-5 h-5" /></div><strong>{stat.value.toString().padStart(2, "0")}</strong></article>)}</div>
       {view === "agenda" && <>
