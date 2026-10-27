@@ -1,4 +1,7 @@
 # Sistema Barbosa
+- [ ] Suavizar o zoom original sem mudar a foto ou o layout.
+- [ ] Atualizar e validar a senha administrativa pelo formulário seguro.
+- [ ] Executar auditoria funcional, corrigir problemas confirmados e entregar relatório com limitações.
 - [x] Desfazer os últimos ajustes da capa conforme solicitado.
 - [x] Reduzir a espera no acesso administrativo sem remover proteção ou expor dados.
 - [x] Refinar identidade visual e animações compartilhadas nas áreas pública e administrativa.
