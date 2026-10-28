@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { availableHours, monthlyDates, validCustomer } from "./booking";
+import { whatsappLink } from "@/data/barbearia";
 describe("Booking rules", () => {
+  it("routes contact WhatsApp to the Brazilian destination", () => expect(whatsappLink("15991566902", "Olá")).toBe("https://wa.me/5515991566902?text=Ol%C3%A1"));
   it("books only remaining monthly weeks from the selected day", () => expect(monthlyDates("2026-10-27")).toEqual(["2026-10-27"]));
   it("retains weekly dates through month end", () => expect(monthlyDates("2026-10-13")).toEqual(["2026-10-13", "2026-10-20", "2026-10-27"]));
   it("opens Tuesday through Friday from 14 to 19", () => expect(availableHours("2026-10-28", new Date(2026,9,27))).toEqual(["14:00","15:00","16:00","17:00","18:00","19:00"]));

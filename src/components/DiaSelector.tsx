@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { localDay } from "@/lib/admin";
 interface Props {
   dias: Date[];
   selected: string;
@@ -20,7 +21,7 @@ const DiaSelector = ({ dias, selected, onSelect }: Props) => (
     <h2 className="text-gold text-lg font-bold mb-3">Escolha o Dia</h2>
     <div className="flex overflow-x-auto gap-2.5 pb-2 -mx-1 px-1">
       {dias.map((d, i) => {
-        const dataStr = d.toISOString().split("T")[0];
+        const dataStr = localDay(d);
         const dia = d.getDate();
         const mes = d.getMonth() + 1;
         const label = `${DIAS_SEMANA[d.getDay()]}., ${dia}/${mes}`;

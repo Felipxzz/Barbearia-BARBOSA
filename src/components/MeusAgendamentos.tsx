@@ -7,7 +7,7 @@ import { CalendarCheck, Search, XCircle } from "lucide-react";
 type Item = { id: string; servico: string; barbeiro: string; dia: string; horario: string; status: string };
 
 const formatDia = (d: string) => new Date(d + "T12:00:00").toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "2-digit" });
-const hoje = () => new Date().toISOString().split("T")[0];
+const passou = (dia: string, horario: string) => new Date(`${dia}T${horario}:00`) <= new Date();
 
 const MeusAgendamentos = ({ barbeiros }: { barbeiros: { id: string; nome: string }[] }) => {
   const [telefone, setTelefone] = useState("");
@@ -54,7 +54,7 @@ const MeusAgendamentos = ({ barbeiros }: { barbeiros: { id: string; nome: string
           <div className="barbosa-services mt-6">
             {itens.map(i => {
               const cancelado = i.status === "cancelado";
-              const passado = i.dia < hoje();
+              const passado = passou(i.dia, i.horario);
               return (
                 <article key={i.id} className="barbosa-card card-anim">
                   <div className="flex items-center justify-between gap-2">
