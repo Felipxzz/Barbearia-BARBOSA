@@ -187,4 +187,4 @@ export const CONTATO = {
 };
 
 export const whatsappLink = (numero: string, texto: string) =>
-  `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
+  `https://wa.me/${numero.length <= 11 ? `55${numero}` : numero}?text=${encodeURIComponent(texto)}`;
