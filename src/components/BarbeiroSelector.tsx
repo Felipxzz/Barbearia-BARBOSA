@@ -1,8 +1,6 @@
+
 import { Button } from "@/components/ui/button";
 import BarberPhoto from "@/components/BarberPhoto";
-import ryanAsset from "@/assets/ryan.jpeg.asset.json";
-const ryanImg = ryanAsset.url;
-import kauanImg from "@/assets/kauan.jpeg.asset.json";
 
 interface Barbeiro {
   id: string;
@@ -17,16 +15,20 @@ interface Props {
 }
 
 const FOTOS: Record<string, string> = {
-  ryan: ryanImg,
-  kauan: kauanImg.url,
+  ryan: "/images/IMG_9236.jpeg",
+  kauan: "/images/IMG_9237.jpeg",
 };
 
 const BarbeiroSelector = ({ barbeiros, selected, onSelect }: Props) => (
   <section>
-    <h2 className="text-gold text-lg font-bold mb-3">Escolha o Barbeiro</h2>
+    <h2 className="text-gold text-lg font-bold mb-3">
+      Escolha o Barbeiro
+    </h2>
+
     <div className="flex flex-col gap-2.5">
       {barbeiros.map((b, i) => (
-        <Button variant="ghost"
+        <Button
+          variant="ghost"
           key={b.id}
           aria-label={b.nome}
           aria-pressed={selected === b.id}
@@ -38,7 +40,11 @@ const BarbeiroSelector = ({ barbeiros, selected, onSelect }: Props) => (
               : "bg-card text-foreground border-gold-subtle"
           }`}
         >
-          <BarberPhoto src={b.foto ?? FOTOS[b.id]} name={b.nome} className="w-12 h-12 shrink-0 rounded-full object-cover transition-transform duration-300 group-hover:scale-110" />
+          <BarberPhoto
+            src={FOTOS[b.id] ?? b.foto}
+            name={b.nome}
+            className="w-12 h-12 shrink-0 rounded-full object-cover transition-transform duration-300 group-hover:scale-110"
+          />
           <span>{b.nome}</span>
         </Button>
       ))}
