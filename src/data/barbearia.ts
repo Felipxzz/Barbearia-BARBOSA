@@ -1,6 +1,9 @@
+
 import ryanAsset from "@/assets/ryan.jpeg.asset.json";
+import kauanAsset from "@/assets/kauan.jpeg.asset.json";
+
 const ryanImg = ryanAsset.url;
-import kauanImg from "@/assets/kauan.jpeg.asset.json";
+const kauanImg = kauanAsset.url;
 
 import corte1 from "@/assets/corte1.jpeg";
 import corte2 from "@/assets/corte2.jpeg";
@@ -29,7 +32,6 @@ export interface Servico {
   destaque?: boolean;
 }
 
-/** Preços e serviços reais já cadastrados no projeto. */
 export const SERVICOS: Servico[] = [
   {
     id: "corte",
@@ -131,7 +133,7 @@ export const BARBEIROS: Barbeiro[] = [
   {
     id: "kauan",
     nome: "Kauan",
-    foto: kauanImg.url,
+    foto: kauanImg,
     especialidade: "Cortes clássicos e degradê",
     descricao:
       "Atendimento caprichado e acabamento preciso. Referência em degradê e cortes sociais.",
