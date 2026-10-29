@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_logs: {
+        Row: {
+          acao: string
+          antes: Json | null
+          created_at: string
+          depois: Json | null
+          descricao: string
+          id: string
+          telefone: string | null
+          tipo: string
+        }
+        Insert: {
+          acao: string
+          antes?: Json | null
+          created_at?: string
+          depois?: Json | null
+          descricao?: string
+          id?: string
+          telefone?: string | null
+          tipo: string
+        }
+        Update: {
+          acao?: string
+          antes?: Json | null
+          created_at?: string
+          depois?: Json | null
+          descricao?: string
+          id?: string
+          telefone?: string | null
+          tipo?: string
+        }
+        Relationships: []
+      }
       agendamentos: {
         Row: {
           barbeiro: string
@@ -59,6 +92,33 @@ export type Database = {
         }
         Relationships: []
       }
+      avaliacoes: {
+        Row: {
+          created_at: string
+          id: string
+          nome: string
+          nota: number
+          status: string
+          texto: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nome: string
+          nota: number
+          status?: string
+          texto: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nome?: string
+          nota?: number
+          status?: string
+          texto?: string
+        }
+        Relationships: []
+      }
       barbosa_catalog: {
         Row: {
           barbeiros: Json
@@ -85,6 +145,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      avaliacoes_aprovadas: {
+        Args: never
+        Returns: {
+          created_at: string
+          id: string
+          nome: string
+          nota: number
+          texto: string
+        }[]
+      }
       cancelar_agendamento: {
         Args: { _codigo: string; _id: string; _telefone: string }
         Returns: boolean
@@ -101,6 +171,10 @@ export type Database = {
         }[]
       }
       criar_agendamentos: { Args: { _itens: Json }; Returns: string }
+      enviar_avaliacao: {
+        Args: { _nome: string; _nota: number; _texto: string }
+        Returns: boolean
+      }
       horarios_ocupados: {
         Args: { _barbeiro: string; _dia: string }
         Returns: string[]
