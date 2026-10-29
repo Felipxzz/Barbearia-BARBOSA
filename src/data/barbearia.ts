@@ -1,10 +1,4 @@
 
-import ryanAsset from "@/assets/ryan.jpeg.asset.json";
-import kauanAsset from "@/assets/kauan.jpeg.asset.json";
-
-const ryanImg = ryanAsset.url;
-const kauanImg = kauanAsset.url;
-
 import corte1 from "@/assets/corte1.jpeg";
 import corte2 from "@/assets/corte2.jpeg";
 import corte3 from "@/assets/corte3.jpeg";
@@ -18,6 +12,13 @@ import corte10 from "@/assets/corte10.jpeg";
 import corte11 from "@/assets/corte11.jpeg";
 import corte12 from "@/assets/corte12.jpeg";
 import corte13 from "@/assets/corte13.jpeg";
+
+// Fotos dos barbeiros hospedadas na Lovable
+const ryanImg =
+  "https://barbearia-barbosa.lovable.app/__l5e/assets-v1/4ad4c240-f0c0-473c-b3bb-d7541a87b16d/ryan.jpeg";
+
+const kauanImg =
+  "https://barbearia-barbosa.lovable.app/__l5e/assets-v1/0045c822-40f8-4b49-bfa1-6f5d5a159ad9/kauan.jpeg";
 
 export type Categoria = "cortes" | "barba" | "combos" | "outros";
 
@@ -111,7 +112,10 @@ export const SERVICOS: Servico[] = [
   },
 ];
 
-export const CATEGORIAS: { id: Categoria | "todos"; label: string }[] = [
+export const CATEGORIAS: {
+  id: Categoria | "todos";
+  label: string;
+}[] = [
   { id: "todos", label: "Todos" },
   { id: "cortes", label: "Cortes" },
   { id: "barba", label: "Barba" },
@@ -178,8 +182,10 @@ export const TRABALHOS: Trabalho[] = [
 export const CONTATO = {
   whatsappPrincipal: "15991566902",
   telefone: "(15) 99156-6902",
-  endereco: "Rua Maria Eunice Bertola Gaioto, 223 - Residencial Bertola, Tietê - SP",
-  mapsQuery: "Rua Maria Eunice Bertola Gaioto 223 Residencial Bertola Tiete SP",
+  endereco:
+    "Rua Maria Eunice Bertola Gaioto, 223 - Residencial Bertola, Tietê - SP",
+  mapsQuery:
+    "Rua Maria Eunice Bertola Gaioto 223 Residencial Bertola Tiete SP",
   instagram: "https://www.instagram.com/",
   horarios: [
     { dia: "Terça a Sexta", hora: "14h às 19h" },
