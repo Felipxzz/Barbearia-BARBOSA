@@ -1,9 +1,18 @@
 
 import { useState } from "react";
-import { ArrowUpRight, Check, Clock, MapPin, Menu, MessageCircle, Scissors, Star, X } from "lucide-react";
+import {
+  ArrowUpRight,
+  Check,
+  Clock,
+  MapPin,
+  Menu,
+  MessageCircle,
+  Scissors,
+  Star,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CONTATO, TRABALHOS, whatsappLink } from "@/data/barbearia";
-
 import { useCatalog } from "@/hooks/use-catalog";
 import BarberPhoto from "@/components/BarberPhoto";
 
@@ -17,6 +26,11 @@ const links = [
   ["#trabalhos", "Trabalhos"],
   ["#contato", "Contato"],
 ];
+
+const FOTOS_BARBEIROS: Record<string, string> = {
+  ryan: "/images/IMG_9237.jpeg",
+  kauan: "/images/IMG_9236.jpeg",
+};
 
 export const BarbosaHeader = () => {
   const [open, setOpen] = useState(false);
@@ -215,13 +229,7 @@ export const BarbosaSections = ({
                 style={{ animationDelay: `${i * 80}ms` }}
               >
                 <BarberPhoto
-                  src={
-                    b.id === "ryan"
-                      ? "/images/IMG_9236.jpeg"
-                      : b.id === "kauan"
-                        ? "/images/IMG_9237.jpeg"
-                        : b.foto
-                  }
+                  src={FOTOS_BARBEIROS[b.id] ?? b.foto}
                   name={b.nome}
                   className="barbosa-team-placeholder object-cover"
                 />
@@ -252,10 +260,7 @@ export const BarbosaSections = ({
         </div>
       </section>
 
-      <section
-        id="sobre"
-        className="barbosa-section barbosa-about"
-      >
+      <section id="sobre" className="barbosa-section barbosa-about">
         <div className="barbosa-container barbosa-about-layout">
           <img
             src={TRABALHOS[0]?.src}
