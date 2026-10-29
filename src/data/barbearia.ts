@@ -13,12 +13,9 @@ import corte11 from "@/assets/corte11.jpeg";
 import corte12 from "@/assets/corte12.jpeg";
 import corte13 from "@/assets/corte13.jpeg";
 
-// Fotos dos barbeiros hospedadas na Lovable
-const ryanImg =
-  "https://barbearia-barbosa.lovable.app/__l5e/assets-v1/4ad4c240-f0c0-473c-b3bb-d7541a87b16d/ryan.jpeg";
-
-const kauanImg =
-  "https://barbearia-barbosa.lovable.app/__l5e/assets-v1/0045c822-40f8-4b49-bfa1-6f5d5a159ad9/kauan.jpeg";
+// Fotos dos barbeiros hospedadas no próprio projeto
+const ryanImg = "/images/ryan.jpeg";
+const kauanImg = "/images/kauan.jpeg";
 
 export type Categoria = "cortes" | "barba" | "combos" | "outros";
 
