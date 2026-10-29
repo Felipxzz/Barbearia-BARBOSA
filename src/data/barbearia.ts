@@ -13,9 +13,9 @@ import corte11 from "@/assets/corte11.jpeg";
 import corte12 from "@/assets/corte12.jpeg";
 import corte13 from "@/assets/corte13.jpeg";
 
-// Fotos dos barbeiros hospedadas no próprio projeto
-const ryanImg = "/images/ryan.jpeg";
-const kauanImg = "/images/kauan.jpeg";
+// Fotos dos barbeiros hospedadas em public/images
+const ryanImg = "/images/IMG_9236.jpeg";
+const kauanImg = "/images/IMG_9237.jpeg";
 
 export type Categoria = "cortes" | "barba" | "combos" | "outros";
 
