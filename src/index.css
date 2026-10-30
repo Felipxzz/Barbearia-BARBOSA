@@ -86,13 +86,14 @@
     border-color: hsl(var(--gold) / 0.2);
   }
 
-  /* Entrada suave dos cards */
+  /* ENTRADA SUAVE DOS CARDS */
   @keyframes card-in {
     from {
       opacity: 0;
       transform: translateY(18px) scale(0.96);
       filter: blur(3px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0) scale(1);
@@ -100,13 +101,14 @@
     }
   }
 
-  /* Brilho dourado dos cards selecionados */
+  /* BRILHO DOURADO DOS CARDS SELECIONADOS */
   @keyframes gold-pulse {
     0%, 100% {
       box-shadow:
         0 5px 20px hsl(var(--gold) / 0.18),
         inset 0 0 0 1px hsl(var(--gold) / 0.15);
     }
+
     50% {
       box-shadow:
         0 8px 30px hsl(var(--gold) / 0.38),
@@ -114,55 +116,78 @@
     }
   }
 
-  /* Zoom discreto e cinematográfico na capa */
-  @keyframes barbosa-cover-zoom {
-    0%, 100% {
-      transform: scale(1);
+  /* REVELAÇÃO CINEMATOGRÁFICA DA CAPA DO RYAN */
+  @keyframes barbosa-hero-reveal {
+    0% {
+      opacity: 0;
+      clip-path: inset(100% 0 0 0);
+      filter: blur(8px);
     }
-    50% {
-      transform: scale(1.045);
+
+    60% {
+      opacity: 1;
+      filter: blur(3px);
+    }
+
+    100% {
+      opacity: 1;
+      clip-path: inset(0 0 0 0);
+      filter: blur(0);
     }
   }
 
   .barbosa-hero-image,
   .barbosa-hero-video {
-    animation: barbosa-cover-zoom 24s ease-in-out infinite;
+    animation: barbosa-hero-reveal 1.6s
+      cubic-bezier(0.22, 1, 0.36, 1) both;
     transform-origin: center center;
-    will-change: transform;
   }
 
+  /* ANIMAÇÕES DOS CARDS */
   .card-anim {
     opacity: 0;
-    animation: card-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
+    animation: card-in 0.65s
+      cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
     transition:
       transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
       box-shadow 0.3s ease,
       border-color 0.3s ease,
       background-color 0.3s ease;
+
     will-change: transform, box-shadow;
     backface-visibility: hidden;
   }
 
+  /* EFEITO AO PASSAR O MOUSE */
   .card-anim:hover:not(:disabled) {
     transform: translateY(-5px) scale(1.02);
+
     box-shadow:
       0 12px 28px hsl(var(--gold) / 0.2),
       0 0 0 1px hsl(var(--gold) / 0.28);
+
     border-color: hsl(var(--gold) / 0.65);
   }
 
+  /* EFEITO AO CLICAR */
   .card-anim:active:not(:disabled) {
     transform: translateY(-1px) scale(0.985);
     transition-duration: 0.12s;
   }
 
+  /* CARD SELECIONADO */
   .card-selected {
     animation:
-      card-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+      card-in 0.65s
+        cubic-bezier(0.22, 1, 0.36, 1) forwards,
       gold-pulse 2.8s ease-in-out 0.65s infinite;
+
     border-color: hsl(var(--gold) / 0.65);
   }
 
+  /* ACESSIBILIDADE */
   @media (prefers-reduced-motion: reduce) {
     .card-anim,
     .card-selected,
@@ -171,6 +196,7 @@
       animation: none;
       opacity: 1;
       filter: none;
+      clip-path: none;
       will-change: auto;
     }
 
