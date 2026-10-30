@@ -44,11 +44,15 @@ const BarbeiroSelector = ({
               : "bg-card text-foreground border-gold-subtle"
           }`}
         >
-          <BarberPhoto
-            src={FOTOS[b.id] ?? b.foto}
-            name={b.nome}
-            className="w-12 h-12 shrink-0 rounded-full object-cover transition-transform duration-300 group-hover:scale-110"
-          />
+          <span className="w-12 h-12 shrink-0 rounded-full overflow-hidden">
+            <BarberPhoto
+              src={FOTOS[b.id] ?? b.foto}
+              name={b.nome}
+              className={`w-12 h-12 rounded-full object-cover transition-transform duration-300 group-hover:scale-110 ${
+                i === 0 ? "barber-photo-zoom" : ""
+              }`}
+            />
+          </span>
 
           <span>{b.nome}</span>
         </Button>
