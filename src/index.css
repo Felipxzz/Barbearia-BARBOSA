@@ -126,6 +126,21 @@
       gold-pulse 2.4s ease-in-out 0.45s infinite;
   }
 
+  /* ---- Zoom suave e contínuo na primeira foto de barbeiro ---- */
+  @keyframes barber-photo-zoom {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.05);
+    }
+  }
+
+  .barber-photo-zoom {
+    animation: barber-photo-zoom 8s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .card-anim,
     .card-selected {
@@ -134,6 +149,9 @@
     }
     .card-anim:hover:not(:disabled) {
       transform: none;
+    }
+    .barber-photo-zoom {
+      animation: none;
     }
   }
 }
