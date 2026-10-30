@@ -5,11 +5,9 @@ import {
   Check,
   Clock,
   MapPin,
-  Menu,
   MessageCircle,
   Scissors,
   Star,
-  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CONTATO, TRABALHOS, whatsappLink } from "@/data/barbearia";
@@ -66,12 +64,16 @@ export const BarbosaHeader = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden"
+            className="lg:hidden menu-animated-button"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
             aria-expanded={open}
             onClick={() => setOpen(!open)}
           >
-            {open ? <X /> : <Menu />}
+            <span className={`menu-lines ${open ? "is-open" : ""}`}>
+              <span />
+              <span />
+              <span />
+            </span>
           </Button>
         </div>
       </nav>
