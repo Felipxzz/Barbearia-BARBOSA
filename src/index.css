@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -66,7 +67,11 @@
 
 @layer utilities {
   .gradient-gold {
-    background: linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(var(--gold-light)) 100%);
+    background: linear-gradient(
+      135deg,
+      hsl(var(--gold)) 0%,
+      hsl(var(--gold-light)) 100%
+    );
   }
 
   .text-gold {
@@ -81,62 +86,97 @@
     border-color: hsl(var(--gold) / 0.2);
   }
 
-  /* ---- Animações dos cards ---- */
+  /* Entrada suave dos cards */
   @keyframes card-in {
     from {
       opacity: 0;
-      transform: translateY(12px) scale(0.97);
+      transform: translateY(18px) scale(0.96);
+      filter: blur(3px);
     }
     to {
       opacity: 1;
       transform: translateY(0) scale(1);
+      filter: blur(0);
     }
   }
 
+  /* Brilho dourado dos cards selecionados */
   @keyframes gold-pulse {
-    0%,
-    100% {
-      box-shadow: 0 6px 22px hsl(var(--gold) / 0.35);
+    0%, 100% {
+      box-shadow:
+        0 5px 20px hsl(var(--gold) / 0.18),
+        inset 0 0 0 1px hsl(var(--gold) / 0.15);
     }
     50% {
-      box-shadow: 0 6px 30px hsl(var(--gold) / 0.6);
+      box-shadow:
+        0 8px 30px hsl(var(--gold) / 0.38),
+        inset 0 0 0 1px hsl(var(--gold) / 0.4);
     }
+  }
+
+  /* Zoom discreto e cinematográfico na capa */
+  @keyframes barbosa-cover-zoom {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.045);
+    }
+  }
+
+  .barbosa-hero-image,
+  .barbosa-hero-video {
+    animation: barbosa-cover-zoom 24s ease-in-out infinite;
+    transform-origin: center center;
+    will-change: transform;
   }
 
   .card-anim {
     opacity: 0;
-    animation: card-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.25s ease, border-color 0.25s ease;
-    will-change: transform;
+    animation: card-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    transition:
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.3s ease,
+      border-color 0.3s ease,
+      background-color 0.3s ease;
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
   }
 
   .card-anim:hover:not(:disabled) {
-    transform: translateY(-3px) scale(1.025);
-    box-shadow: 0 10px 26px hsl(var(--gold) / 0.22);
-    border-color: hsl(var(--gold) / 0.55);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow:
+      0 12px 28px hsl(var(--gold) / 0.2),
+      0 0 0 1px hsl(var(--gold) / 0.28);
+    border-color: hsl(var(--gold) / 0.65);
   }
 
   .card-anim:active:not(:disabled) {
-    transform: translateY(0) scale(0.97);
+    transform: translateY(-1px) scale(0.985);
+    transition-duration: 0.12s;
   }
 
   .card-selected {
-    animation: card-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards,
-      gold-pulse 2.4s ease-in-out 0.45s infinite;
+    animation:
+      card-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+      gold-pulse 2.8s ease-in-out 0.65s infinite;
+    border-color: hsl(var(--gold) / 0.65);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .card-anim,
-    .card-selected {
+    .card-selected,
+    .barbosa-hero-image,
+    .barbosa-hero-video {
       animation: none;
       opacity: 1;
+      filter: none;
+      will-change: auto;
     }
-    .card-anim:hover:not(:disabled) {
+
+    .card-anim:hover:not(:disabled),
+    .card-anim:active:not(:disabled) {
       transform: none;
-    }
-    .barber-photo-zoom {
-      animation: none;
     }
   }
 }
