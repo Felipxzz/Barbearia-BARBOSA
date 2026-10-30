@@ -139,7 +139,7 @@ export const BARBEIROS: Barbeiro[] = [
     descricao:
       "Atendimento caprichado e acabamento preciso. Referência em degradê e cortes sociais.",
     servicos: ["Corte", "Pezinho", "Barba", "Corte + Barba"],
-    whatsapp: "15997451750",
+    whatsapp: "15996966494",
   },
   {
     id: "ryan",
