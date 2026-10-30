@@ -33,6 +33,27 @@ const FOTOS_BARBEIROS: Record<string, string> = {
 export const BarbosaHeader = () => {
   const [open, setOpen] = useState(false);
 
+  const navegar = (href: string) => {
+    setOpen(false);
+
+    const id = href.slice(1);
+
+    window.requestAnimationFrame(() => {
+      document.getElementById(id)?.scrollIntoView({
+        behavior: window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches
+          ? "auto"
+          : "smooth",
+        block: "start",
+      });
+
+      if (window.location.hash !== href) {
+        window.history.replaceState(null, "", href);
+      }
+    });
+  };
+
   return (
     <header className="barbosa-header">
       <nav
@@ -43,6 +64,10 @@ export const BarbosaHeader = () => {
           href="#inicio"
           className="barbosa-wordmark"
           aria-label="Barbearia Barbosa, início"
+          onClick={(event) => {
+            event.preventDefault();
+            navegar("#inicio");
+          }}
         >
           <span>BARBOSA</span>
           <small>BARBEARIA</small>
@@ -50,7 +75,15 @@ export const BarbosaHeader = () => {
 
         <div className="hidden lg:flex items-center gap-5">
           {links.map(([href, label]) => (
-            <a key={href} href={href} className="barbosa-nav-link">
+            <a
+              key={href}
+              href={href}
+              className="barbosa-nav-link"
+              onClick={(event) => {
+                event.preventDefault();
+                navegar(href);
+              }}
+            >
               {label}
             </a>
           ))}
@@ -58,7 +91,15 @@ export const BarbosaHeader = () => {
 
         <div className="flex items-center gap-2">
           <Button asChild className="barbosa-header-cta">
-            <a href="#agendamento">AGENDAR HORÁRIO</a>
+            <a
+              href="#agendamento"
+              onClick={(event) => {
+                event.preventDefault();
+                navegar("#agendamento");
+              }}
+            >
+              AGENDAR HORÁRIO
+            </a>
           </Button>
 
           <Button
@@ -67,7 +108,7 @@ export const BarbosaHeader = () => {
             className="lg:hidden menu-animated-button"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
             aria-expanded={open}
-            onClick={() => setOpen(!open)}
+            onClick={() => setOpen((previous) => !previous)}
           >
             <span className={`menu-lines ${open ? "is-open" : ""}`}>
               <span />
@@ -81,7 +122,14 @@ export const BarbosaHeader = () => {
       {open && (
         <div className="barbosa-mobile-menu lg:hidden">
           {links.map(([href, label]) => (
-            <a key={href} href={href} onClick={() => setOpen(false)}>
+            <a
+              key={href}
+              href={href}
+              onClick={(event) => {
+                event.preventDefault();
+                navegar(href);
+              }}
+            >
               {label}
             </a>
           ))}
@@ -102,14 +150,14 @@ export const BarbosaSections = ({
 
   const SERVICOS = catalog.servicos.filter((s) => s.ativo !== false);
   const BARBEIROS = catalog.barbeiros.filter((b) => b.ativo !== false);
-
   const plan = SERVICOS.find((s) => s.id === "plano");
 
   const book = (id: string) => {
     onChooseService(id);
-    document
-      .getElementById("agendamento")
-      ?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById("agendamento")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   return (
@@ -185,21 +233,17 @@ export const BarbosaSections = ({
                 style={{ animationDelay: `${i * 60}ms` }}
               >
                 <Scissors className="text-primary" />
-
                 <div className="flex items-start justify-between gap-4">
                   <h3>{s.nome}</h3>
                   <strong className="text-primary whitespace-nowrap">
                     {s.preco}
                   </strong>
                 </div>
-
                 <p>{s.descricao}</p>
-
                 <span className="text-xs text-muted-foreground flex items-center gap-2">
                   <Clock className="w-3 h-3" />
                   {s.duracao}
                 </span>
-
                 <Button
                   variant="link"
                   onClick={() => book(s.id)}
@@ -235,14 +279,12 @@ export const BarbosaSections = ({
                   name={b.nome}
                   className="barbosa-team-placeholder object-cover"
                 />
-
                 <div>
                   <h3>{b.nome}</h3>
                   <p className="text-primary font-semibold">
                     {b.especialidade}
                   </p>
                   <p>{b.descricao}</p>
-
                   <Button
                     variant="link"
                     className="p-0"
@@ -269,7 +311,6 @@ export const BarbosaSections = ({
             alt="Corte realizado na Barbearia Barbosa"
             loading="lazy"
           />
-
           <div>
             <span className="barbosa-eyebrow">
               ESTILO E CUIDADO EM CADA DETALHE
@@ -279,19 +320,24 @@ export const BarbosaSections = ({
               <br />
               <span className="text-primary">BARBOSA.</span>
             </h2>
-
             <p className="barbosa-copy">
               Seu corte, sua identidade. Aqui o estilo é levado a sério e o
               resultado é sempre de respeito.
             </p>
-
             <p className="barbosa-copy">
               Do corte ao acabamento, escolha o serviço e o profissional que
               combinam com você.
             </p>
-
             <Button asChild className="barbosa-cta">
-              <a href="#agendamento">
+              <a
+                href="#agendamento"
+                onClick={(event) => {
+                  event.preventDefault();
+                  document.getElementById("agendamento")?.scrollIntoView({
+                    behavior: "smooth",
+                  });
+                }}
+              >
                 AGENDAR MEU HORÁRIO <ArrowUpRight />
               </a>
             </Button>
@@ -307,7 +353,6 @@ export const BarbosaSections = ({
             <br />
             TEM ENDEREÇO.
           </h2>
-
           <div className="barbosa-location">
             <div className="barbosa-card card-anim">
               <MapPin className="text-primary" />
@@ -465,7 +510,14 @@ export const BarbosaFooter = () => (
     <footer className="barbosa-footer">
       <div className="barbosa-container barbosa-footer-grid">
         <div>
-          <a href="#inicio" className="barbosa-wordmark">
+          <a
+            href="#inicio"
+            className="barbosa-wordmark"
+            onClick={(event) => {
+              event.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
             <span>BARBOSA</span>
             <small>BARBEARIA</small>
           </a>
@@ -495,9 +547,7 @@ export const BarbosaFooter = () => (
         <div>
           <h3>SEU HORÁRIO</h3>
           <Button asChild className="barbosa-cta">
-            <a href="#agendamento">
-              AGENDAR AGORA <ArrowUpRight />
-            </a>
+            <a href="#agendamento">AGENDAR AGORA <ArrowUpRight /></a>
           </Button>
           <a href="/admin">Portal do administrador</a>
         </div>
