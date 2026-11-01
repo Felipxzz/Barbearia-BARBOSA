@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Check, X, Star, RefreshCw, History, Wallet, CalendarRange, Download } from "lucide-react";
+import { Check, X, Star, RefreshCw, History, Wallet, CalendarRange, Download, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { financeSummary, isMonthlyPlan, localDay, normalizePhone, type Appointment } from "@/lib/admin";
 import type { Catalog } from "@/hooks/use-catalog";
 
