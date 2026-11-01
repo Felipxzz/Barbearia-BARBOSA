@@ -52,27 +52,54 @@ export const FinanceView = ({ invoke, catalog }: { invoke: Invoke; catalog: Cata
   </>;
 };
 
+type PlanClient = { nome: string; telefone: string; usados: number; restantes: number; proximo?: string; ultimo: string; agendamentos: Row[] };
 export const PlansView = ({ invoke, catalog }: { invoke: Invoke; catalog: Catalog }) => {
   const { data, loading } = useAdminData<Row>(invoke, "history");
   const month = localDay().slice(0, 7);
   const today = localDay();
+  const [selected, setSelected] = useState<PlanClient | null>(null);
   const clients = useMemo(() => {
-    const map = new Map<string, { nome: string; telefone: string; usados: number; restantes: number; proximo?: string; ultimo: string }>();
-    for (const a of data.filter(a => isMonthlyPlan(a) && a.status !== "cancelado" && a.dia.startsWith(month))) {
+    const map = new Map<string, PlanClient>();
+    for (const a of data.filter(a => isMonthlyPlan(a) && a.dia.startsWith(month))) {
       const k = normalizePhone(a.telefone);
-      const c = map.get(k) ?? { nome: a.nome, telefone: a.telefone, usados: 0, restantes: 0, ultimo: a.dia };
-      if (a.dia < today) c.usados++; else { c.restantes++; if (!c.proximo || a.dia < c.proximo) c.proximo = a.dia; }
-      if (a.dia > c.ultimo) c.ultimo = a.dia;
+      const c = map.get(k) ?? { nome: a.nome, telefone: a.telefone, usados: 0, restantes: 0, ultimo: a.dia, agendamentos: [] };
+      c.agendamentos.push(a);
+      if (a.status !== "cancelado") {
+        if (a.dia < today) c.usados++; else { c.restantes++; if (!c.proximo || a.dia < c.proximo) c.proximo = a.dia; }
+        if (a.dia > c.ultimo) c.ultimo = a.dia;
+      }
       map.set(k, c);
     }
+    for (const c of map.values()) c.agendamentos.sort((a, b) => `${a.dia}${a.horario}`.localeCompare(`${b.dia}${b.horario}`));
     return [...map.values()];
   }, [data, month, today]);
   const renew = (d: string) => { const x = new Date(`${d}T12:00:00`); return fmt(localDay(new Date(x.getFullYear(), x.getMonth() + 1, 1))); };
-  void catalog;
+  const barberName = (id: string) => catalog.barbeiros.find(b => b.id === id)?.nome ?? id;
   return <>
     <div className="admin-section-title"><div><h2>Plano mensal</h2><p className="text-sm text-muted-foreground">{clients.length} clientes com plano neste mês</p></div></div>
     {loading ? <Loading /> : clients.length === 0 ? <div className="admin-empty"><CalendarRange /><h3>Nenhum plano ativo neste mês</h3></div> :
-      <div className="admin-catalog-grid">{clients.map(c => <article key={c.telefone} className="admin-catalog-item barbosa-card card-anim"><h3>{c.nome}</h3><p className="text-sm text-muted-foreground">{c.telefone}</p><p className="text-sm mt-4">Cortes usados: <strong className="text-primary">{c.usados}</strong></p><p className="text-sm">Restantes no mês: <strong className="text-primary">{c.restantes}</strong></p><p className="text-xs text-muted-foreground mt-3">{c.proximo ? `Próximo: ${fmt(c.proximo)} · ` : ""}Renovação: {renew(c.ultimo)}</p></article>)}</div>}
+      <div className="admin-catalog-grid">{clients.map(c => <article key={c.telefone} className="admin-catalog-item barbosa-card card-anim"><h3>{c.nome}</h3><p className="text-sm text-muted-foreground">{c.telefone}</p><p className="text-sm mt-4">Cortes usados: <strong className="text-primary">{c.usados}</strong></p><p className="text-sm">Restantes no mês: <strong className="text-primary">{c.restantes}</strong></p><p className="text-xs text-muted-foreground mt-3">{c.proximo ? `Próximo: ${fmt(c.proximo)} · ` : ""}Renovação: {renew(c.ultimo)}</p><Button size="sm" variant="outline" className="mt-4 w-full" aria-label={`Ver agendamentos de ${c.nome}`} onClick={() => setSelected(c)}><List />Ver agendamentos</Button></article>)}</div>}
+    <Dialog open={selected !== null} onOpenChange={o => { if (!o) setSelected(null); }}>
+      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Agendamentos de {selected?.nome}</DialogTitle>
+          <DialogDescription>Plano mensal · {selected?.agendamentos.length ?? 0} registros neste mês</DialogDescription>
+        </DialogHeader>
+        <ul className="space-y-3 mt-2">
+          {selected?.agendamentos.map(a => {
+            const cancelado = a.status === "cancelado";
+            return <li key={a.id} className={`rounded-md border border-border p-3 text-sm ${cancelado ? "opacity-60" : ""}`}>
+              <div className="flex items-center justify-between gap-2">
+                <strong className={cancelado ? "line-through" : ""}>{fmt(a.dia)} · {a.horario}h</strong>
+                <span className={`text-xs font-semibold uppercase tracking-wide ${cancelado ? "text-destructive" : "text-primary"}`}>{cancelado ? "Cancelado" : (a.status ?? "ativo")}</span>
+              </div>
+              <p className={`mt-1 ${cancelado ? "line-through text-muted-foreground" : ""}`}>{a.servico}</p>
+              <p className="text-xs text-muted-foreground mt-1">Profissional: {barberName(a.barbeiro)}</p>
+            </li>;
+          })}
+        </ul>
+      </DialogContent>
+    </Dialog>
   </>;
 };
 
