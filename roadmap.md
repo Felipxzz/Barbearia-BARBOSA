@@ -1,4 +1,8 @@
 # Sistema Barbosa
+- [ ] Organizar menu administrativo móvel em duas colunas e quatro linhas, na ordem solicitada.
+- [ ] Revisar detalhes mensais com todos os registros existentes, status e preço configurável preservados.
+- [ ] Identificar itens administrativos com exclusão segura e registrar limitações sem apagar dados.
+- [ ] Executar testes e verificar painel móvel/desktop, sem publicar ou implantar serviços.
 - [x] Suavizar o zoom original sem mudar a foto ou o layout.
 - [x] Atualizar e validar a senha administrativa pelo formulário seguro.
 - [x] Executar auditoria funcional, corrigir problemas confirmados e entregar relatório com limitações.
