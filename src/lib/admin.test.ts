@@ -7,7 +7,7 @@ describe("Barbosa administration", () => {
     expect(customerGroups([appointment, { ...appointment, id: "two", telefone: "(15) 99999-9999" }])).toHaveLength(1);
   });
   it("retains Kauan individual WhatsApp destination", () => {
-    expect(initialCatalog.barbeiros.find(b => b.id === "kauan")?.whatsapp).toBe("15997451750");
+    expect(initialCatalog.barbeiros.find(b => b.id === "kauan")?.whatsapp).toBe("15996966494");
   });
   it("retains Ryan individual WhatsApp destination", () => {
     expect(initialCatalog.barbeiros.find(b => b.id === "ryan")?.whatsapp).toBe("15991566902");
