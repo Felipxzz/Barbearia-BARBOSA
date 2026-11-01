@@ -1056,3 +1056,169 @@ html {
     display: none;
   }
 }
+
+/* ==========================================
+   MELHORIAS DO PAINEL ADMINISTRATIVO NO CELULAR
+   ========================================== */
+
+@media (max-width: 600px) {
+  .admin-sidebar {
+    padding: 16px 12px;
+    gap: 14px;
+    overflow: hidden;
+  }
+
+  .admin-sidebar nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-nav-button {
+    flex: 0 0 auto;
+    min-width: 76px;
+    min-height: 58px;
+    padding: 8px;
+    white-space: nowrap;
+  }
+
+  .admin-topbar {
+    padding: 18px 16px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .barbosa-admin .admin-topbar h1 {
+    font-size: 29px;
+  }
+
+  .admin-content {
+    padding: 20px 14px;
+    overflow-x: hidden;
+  }
+
+  .admin-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .admin-stat {
+    min-width: 0;
+    padding: 14px;
+  }
+
+  .admin-stat strong {
+    font-size: 34px;
+  }
+
+  .admin-section-title {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .admin-section-title > * {
+    max-width: 100%;
+  }
+
+  .admin-filters {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .admin-filters .admin-search,
+  .admin-filters select,
+  .admin-filters > input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .admin-appointment {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 0;
+  }
+
+  .admin-appointment-info {
+    flex: 1;
+    min-width: calc(100% - 90px);
+  }
+
+  .admin-appointment-actions {
+    width: 100%;
+    padding-left: 0;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .admin-appointment-actions button {
+    min-height: 38px;
+  }
+
+  .admin-catalog-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .admin-catalog-item {
+    padding: 18px;
+  }
+
+  .admin-reminders {
+    padding: 14px;
+    overflow-wrap: anywhere;
+  }
+
+  .admin-reminder-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-dialog {
+    width: calc(100% - 20px);
+    max-width: 100%;
+    max-height: 85svh;
+    overflow-y: auto;
+  }
+
+  .admin-form {
+    width: 100%;
+  }
+
+  .admin-form input:not([type="checkbox"]),
+  .admin-form select,
+  .admin-form textarea {
+    font-size: 16px;
+  }
+
+  .admin-content-footer {
+    padding: 18px 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-stat strong {
+    font-size: 30px;
+  }
+
+  .admin-nav-button {
+    min-width: 68px;
+    font-size: 9px;
+  }
+
+  .barbosa-admin .admin-topbar h1 {
+    font-size: 25px;
+  }
+}
