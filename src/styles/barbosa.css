@@ -1221,3 +1221,49 @@ html {
     font-size: 25px;
   }
 }
+/* CORREÇÃO DO PAINEL ADMINISTRATIVO */
+.admin-shell,
+.admin-main,
+.admin-content {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.admin-shell {
+  overflow-x: clip;
+}
+
+.admin-sidebar nav {
+  flex-wrap: wrap;
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+.admin-content select,
+.admin-content input,
+.admin-content textarea {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+@media (max-width: 600px) {
+  .admin-sidebar nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    overflow: visible;
+  }
+
+  .admin-content {
+    padding: 18px 12px;
+    width: 100%;
+    overflow-x: clip;
+  }
+
+  .admin-content select,
+  .admin-content input,
+  .admin-content textarea {
+    width: 100%;
+    min-width: 0;
+  }
+}
