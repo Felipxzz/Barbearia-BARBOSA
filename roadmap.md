@@ -1,4 +1,7 @@
 # Sistema Barbosa
+- [ ] Auditar rota, login e leitura real da agenda sem alterar senha nem implantar serviços.
+- [ ] Testar oito seções e ações administrativas sem modificar dados existentes; informar limites dos testes reais.
+- [ ] Relatar causas, arquivos, testes e custo em créditos verificável.
 - [ ] Organizar menu administrativo móvel em duas colunas e quatro linhas, na ordem solicitada.
 - [ ] Revisar detalhes mensais com todos os registros existentes, status e preço configurável preservados.
 - [ ] Identificar itens administrativos com exclusão segura e registrar limitações sem apagar dados.
