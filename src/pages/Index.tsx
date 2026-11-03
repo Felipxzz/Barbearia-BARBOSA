@@ -99,7 +99,8 @@ const Index = () => {
     return result;
   }, []);
 
-  // Busca os horários ocupados quando o barbeiro ou o dia muda.
+ 
+  // Atualiza os horários ocupados ao selecionar profissional/dia e periodicamente.
   useEffect(() => {
     if (!barbeiro || !dia) {
       setHorariosOcupados([]);
@@ -107,7 +108,6 @@ const Index = () => {
     }
 
     let active = true;
-    setHorariosOcupados([]);
 
     const fetchOcupados = async () => {
       const { data, error } = await supabase.rpc(
@@ -122,136 +122,34 @@ const Index = () => {
 
       if (error) {
         toast.error(
-          "Não foi possível verificar os horários. Tente selecionar o dia novamente."
+          "Não foi possível atualizar os horários. Tente novamente."
         );
         return;
       }
 
-      setHorariosOcupados((data as string[] | null) ?? []);
+      const ocupados = (data as string[] | null) ?? [];
+
+      setHorariosOcupados(ocupados);
+
+      setHorario((atual) =>
+        ocupados.includes(atual) ? "" : atual
+      );
     };
 
     fetchOcupados();
 
+    const intervalId = window.setInterval(
+  fetchOcupados,
+  10000
+);
+    );
+
     return () => {
       active = false;
+      window.clearInterval(intervalId);
     };
   }, [barbeiro, dia]);
 
-  const handleAgendar = async () => {
-    if (
-      !nome ||
-      !telefone ||
-      servicos.length === 0 ||
-      !barbeiro ||
-      !dia ||
-      !horario
-    ) {
-      toast.error("Preencha todas as informações!");
-      return;
-    }
-
-    if (!validCustomer(nome, telefone)) {
-      toast.error(
-        "Informe um nome com pelo menos duas letras e telefone com DDD (10 a 13 dígitos)."
-      );
-      return;
-    }
-
-    setLoading(true);
-
-    const servicoTexto = servicos
-      .map((id) => SERVICOS.find((s) => s.id === id)?.nome)
-      .join(", ");
-
-    const isPlano = servicos.includes("plano");
-
-    // O plano mensal agenda para as semanas do mesmo mês.
-    const datasParaAgendar = isPlano
-      ? monthlyDates(dia)
-      : [dia];
-
-    const servicosInfo = servicos
-      .map((id) => SERVICOS.find((s) => s.id === id))
-      .filter(Boolean);
-
-    const barbeiroInfo = BARBEIROS.find(
-      (b) => b.id === barbeiro
-    );
-
-    if (
-      !barbeiroInfo ||
-      servicos.some(
-        (id) => !SERVICOS.some((s) => s.id === id)
-      )
-    ) {
-      toast.error(
-        "Selecione novamente os serviços e o profissional disponíveis."
-      );
-      setLoading(false);
-      return;
-    }
-
-    const telefoneBarbearia = barbeiroInfo.whatsapp;
-
-    const servicosTexto = servicosInfo
-      .map((s) => (s ? `${s.nome} - ${s.preco}` : ""))
-      .filter(Boolean)
-      .join(", ");
-
-    const datasTexto = isPlano
-      ? datasParaAgendar.join(", ")
-      : dia;
-
-    const mensagem = `Olá, gostaria de agendar na Barbearia Barbosa.
-Nome: ${nome}
-Telefone: ${telefone}
-Serviço(s): ${servicosTexto}
-Barbeiro: ${barbeiroInfo.nome}
-Data(s): ${datasTexto}
-Horário: ${horario}
-${isPlano ? "📋 PLANO MENSAL - Agendado para todas as semanas do mês\n" : ""}OBS: ${obs}`;
-
-    const inserts = datasParaAgendar.map((diaAgendar) => ({
-      nome,
-      telefone,
-      servico: servicoTexto,
-      barbeiro,
-      dia: diaAgendar,
-      horario,
-      obs: isPlano
-        ? `${obs ? obs + " | " : ""}Plano Mensal`
-        : obs,
-    }));
-
-    const { data: codigo, error } = await supabase.rpc(
-      "criar_agendamentos",
-      {
-        _itens: inserts,
-      }
-    );
-
-    if (error) {
-      if (error.code === "23505") {
-        toast.error(
-          "Um dos horários já foi reservado! Escolha outro."
-        );
-      } else {
-        toast.error("Erro ao agendar. Tente novamente.");
-      }
-
-      setLoading(false);
-      return;
-    }
-
-    setHorariosOcupados((prev) => [...prev, horario]);
-
-    const urlWhats = `https://wa.me/${
-      telefoneBarbearia.length <= 11
-        ? `55${telefoneBarbearia}`
-        : telefoneBarbearia
-    }?text=${encodeURIComponent(
-      `${mensagem}\nCódigo do agendamento: ${codigo}`
-    )}`;
 
     // Abre o WhatsApp na mesma aba.
     window.location.href = urlWhats;
