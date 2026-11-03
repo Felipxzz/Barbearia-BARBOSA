@@ -29,6 +29,20 @@
       "when": 1793235644577,
       "tag": "0003_audit_logs_and_reviews",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793704257124,
+      "tag": "0004_protecao_rpc_agendamentos",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793704322326,
+      "tag": "0005_habilitar_pgcrypto_codigo_seguro",
+      "breakpoints": true
     }
   ]
 }
