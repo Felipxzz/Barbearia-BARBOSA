@@ -40,7 +40,15 @@ export const FinanceView = ({ invoke, catalog }: { invoke: Invoke; catalog: Cata
   const name = (id: string) => catalog.barbeiros.find(b => b.id === id)?.nome ?? id;
   return <>
     <div className="admin-section-title"><div><h2>Fechamento</h2><p className="text-sm text-muted-foreground">Valores estimados pelos preços atuais dos serviços; cancelados não entram.</p></div>
-      <div className="admin-segment"><Button size="sm" variant="ghost" onClick={() => preset(1)}>Hoje</Button><Button size="sm" variant="ghost" onClick={() => preset(7)}>7 dias</Button><Button size="sm" variant="ghost" onClick={() => preset("mes")}>Este mês</Button></div></div>
+      <Button
+  size="sm"
+  variant="outline"
+  onClick={() => void load()}
+  disabled={loading}
+>
+  <RefreshCw className={loading ? "w-4 h-4 animate-spin" : "w-4 h-4"} />
+  Atualizar
+</Button>
     <div className="admin-filters"><label className="text-sm">De <input type="date" aria-label="Data inicial" value={from} onChange={e => setFrom(e.target.value)} /></label><label className="text-sm">Até <input type="date" aria-label="Data final" value={to} onChange={e => setTo(e.target.value)} /></label></div>
     {loading ? <Loading /> : <>
       <div className="admin-stats">{[["Faturamento", money(s.total)], ["Atendimentos", String(s.atendimentos)], ["Ticket médio", money(s.ticketMedio)], ["Serviço top", s.servicos[0]?.nome ?? "—"]].map(([t, v]) => <article key={t} className="admin-stat barbosa-card card-anim"><div className="flex justify-between gap-3"><span>{t}</span><Wallet className="text-primary w-5 h-5" /></div><strong className="!text-3xl">{v}</strong></article>)}</div>
