@@ -1289,3 +1289,128 @@ html {
     font-size: 14px;
   }
 }
+
+/* ==========================================
+   FINANCEIRO - FILTROS E DATAS
+   ========================================== */
+
+.finance-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  margin: 20px 0 28px;
+  padding: 18px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  background: hsl(var(--card));
+}
+
+.finance-presets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.finance-preset-button {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background .2s ease, border-color .2s ease;
+}
+
+.finance-preset-button:hover {
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary) / .10);
+}
+
+.finance-date-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+}
+
+.finance-date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.finance-date-field input[type="date"] {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 9px 10px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  color-scheme: dark;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.finance-date-field input[type="date"]:focus {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 2px hsl(var(--primary) / .15);
+}
+
+/* CELULAR */
+@media (max-width: 600px) {
+  .finance-filters {
+    gap: 16px;
+    margin: 16px 0 24px;
+    padding: 14px;
+  }
+
+  .finance-presets {
+    gap: 7px;
+  }
+
+  .finance-preset-button {
+    min-height: 42px;
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+
+  .finance-date-fields {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .finance-date-field {
+    gap: 6px;
+  }
+
+  .finance-date-field input[type="date"] {
+    min-height: 46px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .finance-filters {
+    padding: 11px;
+  }
+
+  .finance-presets {
+    gap: 5px;
+  }
+
+  .finance-preset-button {
+    font-size: 11px;
+  }
+}
