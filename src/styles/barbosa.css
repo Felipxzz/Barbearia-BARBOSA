@@ -1220,14 +1220,24 @@ html {
   .barbosa-admin .admin-topbar h1 {
     font-size: 25px;
   }
-}/* MENU ADMINISTRATIVO: 4 BOTÕES POR LINHA */
+}/* MENU ADMINISTRATIVO COMPACTO */
 @media (max-width: 600px) {
+  .admin-sidebar {
+    padding: 8px 12px 6px;
+    gap: 6px;
+  }
+
+  .admin-sidebar .barbosa-wordmark {
+    margin: 0;
+  }
+
   .admin-sidebar nav {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
+    column-gap: 6px;
+    row-gap: 2px;
     overflow: visible;
-    padding: 4px 0;
+    padding: 0;
   }
 
   .admin-nav-button {
@@ -1249,9 +1259,7 @@ html {
     border-left: 0;
     border-bottom: 2px solid hsl(var(--primary));
   }
-}
-
-/* CAMPOS DE DATA DO FINANCEIRO NO CELULAR */
+}/* CAMPOS DE DATA DO FINANCEIRO NO CELULAR */
 @media (max-width: 600px) {
   .admin-filters {
     display: grid;
