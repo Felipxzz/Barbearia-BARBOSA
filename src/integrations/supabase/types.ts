@@ -179,6 +179,16 @@ export type Database = {
         Args: { _barbeiro: string; _dia: string }
         Returns: string[]
       }
+      reagendar_agendamento: {
+        Args: {
+          _codigo: string
+          _dia: string
+          _horario: string
+          _id: string
+          _telefone: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
