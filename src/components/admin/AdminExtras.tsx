@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -60,17 +61,17 @@ export const FinanceView = ({ invoke, catalog }: { invoke: Invoke; catalog: Cata
   const [from, setFrom] = useState(today);
   const [to, setTo] = useState(today);
 
-  const preset = (days: number | "mes") => {
-    const d = new Date();
+  const preset = (period: number | "mes") => {
+    const date = new Date();
 
-    if (days === "mes") {
-      setFrom(localDay(new Date(d.getFullYear(), d.getMonth(), 1)));
-      setTo(localDay(new Date(d.getFullYear(), d.getMonth() + 1, 0)));
+    if (period === "mes") {
+      setFrom(localDay(new Date(date.getFullYear(), date.getMonth(), 1)));
+      setTo(localDay(new Date(date.getFullYear(), date.getMonth() + 1, 0)));
       return;
     }
 
-    const start = new Date();
-    start.setDate(d.getDate() - days + 1);
+    const start = new Date(date);
+    start.setDate(date.getDate() - period + 1);
     setFrom(localDay(start));
     setTo(today);
   };
@@ -85,7 +86,7 @@ export const FinanceView = ({ invoke, catalog }: { invoke: Invoke; catalog: Cata
 
   return (
     <>
-      <div className="admin-section-title">
+      <div className="admin-section-title finance-heading">
         <div>
           <h2>Fechamento</h2>
           <p className="text-sm text-muted-foreground">
@@ -104,39 +105,61 @@ export const FinanceView = ({ invoke, catalog }: { invoke: Invoke; catalog: Cata
         </Button>
       </div>
 
-      <div className="admin-segment">
-        <Button size="sm" variant="ghost" onClick={() => preset(1)}>
-          Hoje
-        </Button>
-        <Button size="sm" variant="ghost" onClick={() => preset(7)}>
-          7 dias
-        </Button>
-        <Button size="sm" variant="ghost" onClick={() => preset("mes")}>
-          Este mês
-        </Button>
-      </div>
+      <section className="finance-filters" aria-label="Filtros do fechamento">
+        <div className="finance-presets">
+          <Button
+            size="sm"
+            variant="ghost"
+            className="finance-preset-button"
+            onClick={() => preset(1)}
+            aria-pressed={from === today && to === today}
+          >
+            Hoje
+          </Button>
 
-      <div className="admin-filters">
-        <label className="text-sm">
-          De
-          <input
-            type="date"
-            aria-label="Data inicial"
-            value={from}
-            onChange={e => setFrom(e.target.value)}
-          />
-        </label>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="finance-preset-button"
+            onClick={() => preset(7)}
+          >
+            7 dias
+          </Button>
 
-        <label className="text-sm">
-          Até
-          <input
-            type="date"
-            aria-label="Data final"
-            value={to}
-            onChange={e => setTo(e.target.value)}
-          />
-        </label>
-      </div>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="finance-preset-button"
+            onClick={() => preset("mes")}
+          >
+            Este mês
+          </Button>
+        </div>
+
+        <div className="finance-date-fields">
+          <label className="finance-date-field">
+            <span>De</span>
+            <input
+              type="date"
+              aria-label="Data inicial"
+              value={from}
+              max={to}
+              onChange={e => setFrom(e.target.value)}
+            />
+          </label>
+
+          <label className="finance-date-field">
+            <span>Até</span>
+            <input
+              type="date"
+              aria-label="Data final"
+              value={to}
+              min={from}
+              onChange={e => setTo(e.target.value)}
+            />
+          </label>
+        </div>
+      </section>
 
       {loading ? (
         <Loading />
