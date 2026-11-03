@@ -140,6 +140,24 @@ export type Database = {
         }
         Relationships: []
       }
+      rpc_rate_limits: {
+        Row: {
+          chave: string
+          contagem: number
+          janela_inicio: string
+        }
+        Insert: {
+          chave: string
+          contagem?: number
+          janela_inicio?: string
+        }
+        Update: {
+          chave?: string
+          contagem?: number
+          janela_inicio?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -157,6 +175,10 @@ export type Database = {
       }
       cancelar_agendamento: {
         Args: { _codigo: string; _id: string; _telefone: string }
+        Returns: boolean
+      }
+      checar_limite: {
+        Args: { _chave: string; _janela: string; _max: number }
         Returns: boolean
       }
       consultar_agendamentos: {
