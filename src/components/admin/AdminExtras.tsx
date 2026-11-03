@@ -1,6 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Check, X, Star, RefreshCw, History, Wallet, CalendarRange, Download, List } from "lucide-react";
+import {
+  Check,
+  X,
+  Star,
+  RefreshCw,
+  History,
+  CircleDollarSign,
+  CalendarCheck,
+  Receipt,
+  Trophy,
+  CalendarRange,
+  Download,
+  List
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { financeSummary, isMonthlyPlan, localDay, normalizePhone, type Appointment } from "@/lib/admin";
@@ -131,17 +144,36 @@ export const FinanceView = ({ invoke, catalog }: { invoke: Invoke; catalog: Cata
         <>
           <div className="admin-stats">
             {[
-              ["Faturamento", money(s.total)],
-              ["Atendimentos", String(s.atendimentos)],
-              ["Ticket médio", money(s.ticketMedio)],
-              ["Serviço top", s.servicos[0]?.nome ?? "—"],
-            ].map(([t, v]) => (
-              <article key={t} className="admin-stat barbosa-card card-anim">
+              {
+                title: "Faturamento",
+                value: money(s.total),
+                icon: CircleDollarSign
+              },
+              {
+                title: "Atendimentos",
+                value: String(s.atendimentos),
+                icon: CalendarCheck
+              },
+              {
+                title: "Ticket médio",
+                value: money(s.ticketMedio),
+                icon: Receipt
+              },
+              {
+                title: "Serviço top",
+                value: s.servicos[0]?.nome ?? "—",
+                icon: Trophy
+              },
+            ].map(({ title, value, icon: Icon }) => (
+              <article
+                key={title}
+                className="admin-stat barbosa-card card-anim"
+              >
                 <div className="flex justify-between gap-3">
-                  <span>{t}</span>
-                  <Wallet className="text-primary w-5 h-5" />
+                  <span>{title}</span>
+                  <Icon className="text-primary w-5 h-5" />
                 </div>
-                <strong className="!text-3xl">{v}</strong>
+                <strong className="!text-3xl">{value}</strong>
               </article>
             ))}
           </div>
