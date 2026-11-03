@@ -1290,6 +1290,7 @@ html {
   }
 }
 
+
 /* ==========================================
    FINANCEIRO - FILTROS E DATAS
    ========================================== */
@@ -1301,11 +1302,13 @@ html {
   width: 100%;
   margin: 20px 0 28px;
   padding: 18px;
-  border: 1px solid hsl(var(--border));
+  background: hsl(240 9% 3%);
+  border: 1px solid hsl(0 0% 15%);
   border-radius: 12px;
-  background: hsl(var(--card));
+  box-sizing: border-box;
 }
 
+/* BOTÕES DE PERÍODO */
 .finance-presets {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1315,20 +1318,26 @@ html {
 
 .finance-preset-button {
   width: 100%;
-  min-height: 42px;
-  border: 1px solid hsl(var(--border));
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 8px;
+  color: hsl(0 0% 88%);
+  background: hsl(240 5% 7%);
+  border: 1px solid hsl(0 0% 17%);
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
-  transition: background .2s ease, border-color .2s ease;
+  transition: all .2s ease;
 }
 
 .finance-preset-button:hover {
-  border-color: hsl(var(--primary));
-  background: hsl(var(--primary) / .10);
+  color: white;
+  background: hsl(1 100% 54% / .10);
+  border-color: hsl(1 100% 54% / .55);
 }
 
+/* CAMPOS DE DATA */
 .finance-date-fields {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1341,7 +1350,7 @@ html {
   flex-direction: column;
   gap: 8px;
   min-width: 0;
-  color: hsl(var(--muted-foreground));
+  color: hsl(0 0% 68%);
   font-size: 13px;
   font-weight: 600;
 }
@@ -1352,10 +1361,10 @@ html {
   min-width: 0;
   min-height: 44px;
   padding: 9px 10px;
-  border: 1px solid hsl(var(--border));
+  color: hsl(0 0% 94%);
+  background: hsl(240 5% 7%);
+  border: 1px solid hsl(0 0% 17%);
   border-radius: 8px;
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
   color-scheme: dark;
   font-family: inherit;
   font-size: 14px;
@@ -1364,11 +1373,11 @@ html {
 }
 
 .finance-date-field input[type="date"]:focus {
-  border-color: hsl(var(--primary));
-  box-shadow: 0 0 0 2px hsl(var(--primary) / .15);
+  border-color: hsl(1 100% 54%);
+  box-shadow: 0 0 0 2px hsl(1 100% 54% / .15);
 }
 
-/* CELULAR */
+/* RESPONSIVIDADE */
 @media (max-width: 600px) {
   .finance-filters {
     gap: 16px;
@@ -1381,7 +1390,7 @@ html {
   }
 
   .finance-preset-button {
-    min-height: 42px;
+    min-height: 44px;
     padding: 8px 4px;
     font-size: 12px;
   }
@@ -1391,13 +1400,8 @@ html {
     gap: 12px;
   }
 
-  .finance-date-field {
-    gap: 6px;
-  }
-
   .finance-date-field input[type="date"] {
     min-height: 46px;
-    font-size: 14px;
   }
 }
 
