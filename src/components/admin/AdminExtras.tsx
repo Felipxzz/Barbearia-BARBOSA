@@ -54,7 +54,7 @@ export const FinanceView = ({ invoke, catalog }: { invoke: Invoke; catalog: Cata
 
 type PlanClient = { nome: string; telefone: string; usados: number; restantes: number; proximo?: string; ultimo: string; agendamentos: Row[] };
 export const PlansView = ({ invoke, catalog }: { invoke: Invoke; catalog: Catalog }) => {
-  const { data, loading } = useAdminData<Row>(invoke, "history");
+  const { data, loading, load } = useAdminData<Row>(invoke, "history");
   const month = localDay().slice(0, 7);
   const today = localDay();
   const [selected, setSelected] = useState<PlanClient | null>(null);
